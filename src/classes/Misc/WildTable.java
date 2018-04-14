@@ -1,0 +1,296 @@
+package classes.Misc;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+/**
+ *
+ * @author PC
+ */
+public class WildTable {
+    public ArrayList<String> effectList = new ArrayList();
+    
+    public WildTable(){
+        effectList.add("Roll on this table at the start of each of your turns for the next minute, ignoring this result on subsequent rolls.");
+        effectList.add("For the next minute, you can see any invisible creature if you have line of sight to it.");
+        effectList.add("A modron chosen and controlled by the DM appears in an unoccupied space withing 5 feet of you, then disappears 1 minute later.");
+        effectList.add("You cast *fireball* as a 3rd-level spell centered on yourself.");
+        effectList.add("You cast *magic missle* as a 5th-level spell.");
+        effectList.add("You shrink 1d10 inches.");
+        effectList.add("You grow 1d10 inches.");
+        effectList.add("You cast *confusion* centered on yourself");
+        effectList.add("For the next minute, you regain 5 hit points at the start of each of your turns.");
+        effectList.add("You grow a long beard made of feathers that remains until you sneeze, at which point the feathers explode out from your face.");
+        effectList.add("You cast *grease* centered on yourself");
+        effectList.add("Creatures have disadvantage on saving throws against the next spell you cast in the next minute that involves a saving throw.");
+        effectList.add("Your skin turns a vibrant colour. Roll 1d3 twice. 1 = red, 2 = blue, 3 = yellow. Add the two colours together to get the result.");
+        effectList.add("An eye appears on your forehead for the next minute. During that time, you have advantage on Wisdom (Perception) checks that rely on sight.");
+        effectList.add("For the next minute, all your spells with a casting time of 1 action have a casting time of 1 bonus action.");
+        effectList.add("You teleport up to 60 feet to an unoccupied space of your choice that you can see.");
+        effectList.add("You are transported to the Astral Plane until the end of your next turn, after which time you return to the space you previously occupied or the nearest unoccupied space if that space is occupied.");
+        effectList.add("Maximize the damage of the next damaging spell you cast within the next minute.");
+        effectList.add("Roll a d10. Your age changes by a number of years equal to the roll. If the roll is odd, you get older. If the roll is even, you get younger (minimum 1 year old).");
+        effectList.add("1d6 flumphs controlled by the DM appear in unoccupied spaces within 60 feet of you and are frightened of you. They vanish after 1 minute.");
+        effectList.add("You regain 2d10 hit points.");
+        effectList.add("You turn into a potted plant until the start of your next turn. While a plant, you are incapacitated and have vulnerability to all damage. If you drop to 0 hit points, you pot beaks, and your form reverts.");
+        effectList.add("For the next minute, you can teleport up to 20 feet as a bonus action on each of your turns.");
+        effectList.add("You cast *levitate* on yourself.");
+        effectList.add("A unicorn controlled by the DM appears in a space within 5 feet of you, the disappears 1 minute later.");
+        effectList.add("You can't speak for the next minute. Whenever you try, pink bubbles float out of your mouth.");
+        effectList.add("A spectral shield hovers near you for the next minute, granting you a +2 bonus to AC and immunity to *magic missle*");
+        effectList.add("You are immune to being intoxicated by alcohol for the next 5d6 days.");
+        effectList.add("Your hair falls out but grows back within 24 hours.");
+        effectList.add("For the next minute, any flammable object you touch that isn't being worn or carried by any creature bursts into flame.");
+        effectList.add("You regain your lowest-level expended spell slot.");
+        effectList.add("You cast *fog cloud* centered on yourself.");
+        effectList.add("Up to three creatures you choose within 30 feet of you take 4d10 lightning damage.");
+        effectList.add("You are frghtened by the nearest creature until the end of your next turn.");
+        effectList.add("Each creature within 30 feet of you becomes invisible for the next minute. The invisibility ends on a creature when it attacks or casts a spell.");
+        effectList.add("You gain resistance to all damage for the next minute.");
+        effectList.add("A random creature within 60 feet of you becomes poisoned for 1d4 hours.");
+        effectList.add("You glow with a bright light in a 30-foot radius for the next minute. Any creature that ends its turn within 5 feet of you is blinded until the end of its next turn.");
+        effectList.add("You cast *polymorph* on  yourself. If you fail the saving throw, you turn into a sheep for the spell's duration.");
+        effectList.add("Illusory butterflies and flower petals flutter in the air within 10 feet of you for the next minute.");
+        effectList.add("You can take one additional action immediately.");
+        effectList.add("Each creature within 30 feet of you takes 1d10 necrotic damage. You regain hit points equal to the sum of the necrotic damage dealt.");
+        effectList.add("You cast *mirror image*");
+        effectList.add("You cast *fly* on a random creature within 60 feet of you.");
+        effectList.add("You become invisible for the next minute. During that time, other creatures can't hear you. The invisibility ends if you attack or cast a spell.");
+        effectList.add("If you die within the next minute, you immediately come back to life as if by the *reincarnate* spell.");
+        effectList.add("You size decreases by one size category for the next minute.");
+        effectList.add("You and all creatures within 30 feet of you gain vulnerability to piercing damage for the next minute.");
+        effectList.add("You are surrounded by faint, ethereal music for the next minute.");
+        effectList.add("You regain all expended sorcery points.");
+        effectList.add("All your nonmagical clothing and equipment teleports to the nearest open space at least 15 feet from you that you can see.");
+        effectList.add("You jump forward in time exactly one minute. From the perspective of everyone else, you don’t exist.");
+        effectList.add("You gain the ability to speak with animals for one day.");
+        effectList.add("You gain spider climb for one minute, but does not require concentration.");
+        effectList.add("For the next hour, you appear to others to be the opposite gender, but are not.");
+        effectList.add("You gain 1d6x10 pounds. You gradually return to your original weight over the course of one day.");
+        effectList.add("You transform into an empty wooden chest for one minute, during which time you are considered petrified.");
+        effectList.add("The next time you cast this spell, roll twice on this chart.");
+        effectList.add("One creature of your choice gets +1 Attack, +1 Damage and +1 AC for one minute.");
+        effectList.add("For the next day, you gain proficiency in all skills that you do not already have proficiency.");
+        effectList.add("You immediately take 2d6 psychic damage.");
+        effectList.add("The next time you cast this spell, roll on this table (You are aware of this effect).");
+        effectList.add("Your Strength is increased by 2 for one minute.");
+        effectList.add("You’re feeling lucky. For the next hour, any time you make an ability check, roll 1d6 and add the result.");
+        effectList.add("Make a Wisdom (Will) save at your own DC. If you fail, you are polymorphed into giant rabbit for one minute.");
+        effectList.add("For the next hour, any time you make an ability or skill check, roll 1d6 and subtract the result.");
+        effectList.add("You shrink 1d6 inches in height. You gradually return to your original height over the course of one day.");
+        effectList.add("All silver you are carrying is now copper.");
+        effectList.add("Your clothes become dirty and filthy. Until you can change and/or clean your clothes, your Charisma is reduced by 1.");
+        effectList.add("All creatures within 20’ of you, including you, must make a Dexterity (Reflex) save at your spell DC or be affected by a Faerie Fire spell.");
+        effectList.add("You transform into a stone statue of yourself for one minute, during which time you are considered petrified.");
+        effectList.add("A bad joke comes to mind and until you tell it (which takes an entire action), you suffer a WIS penalty of 1.");
+        effectList.add("Make a Constitution (Fortitude) save at your spell DC. If you fail, you are stunned for one minute.");
+        effectList.add("You lose the ability to see for one day.");
+        effectList.add("All allies within 20’ of you are healed for 3d8 HP.");
+        effectList.add("Your speed is increased by 10’ for one day.");
+        effectList.add("You get -1 AC for one minute.");
+        effectList.add("You permanently gain one cantrip.");
+        effectList.add("You grow 1d6 inches in height. You gradually return to your original height over the course of one day.");
+        effectList.add("You are surrounded by a horrible, noxious odor for one minute. Anyone within 10’ of you must make a DC12 Constitution (Fortitude) save or be Stunned.");
+        effectList.add("For the next day, everything you say must rhyme. If it doesn’t, you take 1d6 psychic damage.");
+        effectList.add("You gain blind-sight 60’ for one minute.");
+        effectList.add("All creatures that can perceive you must make a Charisma (Will) save at your Spell DC or be frightened of you.");
+        effectList.add("Your Charisma is increased by 2 for one day.");
+        effectList.add("Your Strength score is swapped with your Intelligence score.");
+        effectList.add("You are the center of a *fog* spell which lasts for one minute.");
+        effectList.add("You gain dark-vision 60’ for one minute. If you already have dark-vision, you lose it for one minute.");
+        effectList.add("All gold you are carrying is now silver.");
+        effectList.add("You immediately gain 15 temporary hit points.");
+        effectList.add("You permanently gain one first level spell slot but lose one cantrip.");
+        effectList.add("You are surrounded by a faint, pleasant odor for one minute. You get Advantage on all Charisma based checks.");
+        effectList.add("A 30’ cube *hypnotic pattern* appears with you at the center, affecting all creatures within it, including you.");
+        effectList.add("You gain the ability to speak one new language of your choice. However, you lose the ability to speak one language you already know.");
+        effectList.add("For the next minute, you can pass through any solid, non-magical wall that is 6” thick or less.");
+        effectList.add("One random gem worth 100gp appears near you.");
+        effectList.add("Your feet sink into the ground making you completely immobile for one minute. This has no effect if you were not standing on the ground when the spell was cast.");
+        effectList.add("All creatures within 20’ of you must make a Strength (Fortitude) save at your spell DC or be knocked prone by a blast of air.");
+        effectList.add("One randomly chosen non-magical item in your possession that weighs 1 pound or less is duplicated.");
+        effectList.add("For 2d6 hours, you have a faint pink glow. This gives anyone trying to perceive you advantage.");
+        effectList.add("3d6 gold pieces appear near you.");
+        effectList.add("For 2d6 days, you glow bright yellow. This gives anyone trying to perceive you advantage");
+        effectList.add("3d6 random gems appear near you, worth 50gp each.");
+        effectList.add("A gentle gust of wind blows outward from you. All within 40’ can feel it, but it otherwise does nothing.");
+        effectList.add("You permanently lose the ability to smell. This sense can be restored with a Cure Disease or Remove Curse.");
+        effectList.add("Choose one permanent or triggered effect which hasn’t happened that you’ve received from this chart and remove it, even if it was beneficial.");
+        effectList.add("You transform into a stuffed animal resembling you for one minute, during which time you are considered petrified.");
+        effectList.add("The effects of gravity are reversed for you for one minute. If you are outside, make a DC10 Dexterity (Reflex) save to avoid falling into the sky.");
+        effectList.add("For 1 minute, a duplicate of yourself appears in the nearest open space which can take actions independently, and goes on the same Initiative as you. However, any damage it takes as well as any spell slots or sorcery point it uses applies to you as well.");
+        effectList.add("The next single target spell you cast must target one additional target.");
+        effectList.add("One or both of your eyes permanently change colour. Roll 1d2 to determine how many, then roll 2d3. 1 = Red, 2 = Blue, 3 = Green. Mix the colours together for the result.");
+        effectList.add("Your hair grows to double its current length over the next minute.");
+        effectList.add("You are at the center of a *darkness* spell for one minute.");
+        effectList.add("You become intoxicated for 2d6 hours.");
+        effectList.add("You make no sounds for one minute and you gain advantage on any Dexterity (Stealth) checks.");
+        effectList.add("You recover all your expended spell slots.");
+        effectList.add("You are confused for one minute, as though you were affected by the *confusion* spell.");
+        effectList.add("All your equipment turns invisible for one minute.");
+        effectList.add("Each humanoid within 30 feet of you must succeed a DC 15 Wisdom (Will) save or they must use their next turn to hug you.");
+        effectList.add("Each creature within 30 feet of you becomes invisible to you for one minute.");
+        effectList.add("You and your target switch positions after casting.");
+        effectList.add("Cabbages sprout abundantly within a 30 foot radius.");
+        effectList.add("You and your target are flung 10 feet away from eachother.");
+        effectList.add("Your spell ricochets off your intended target and affects a random creature within 30 feet.");
+        effectList.add("You gain a 3 foot prehensile tail for 1 hour.");
+        effectList.add("Your face is blackened by small explosion of soot.");
+        effectList.add("All objects and creatures within 20 feet are pulled 10 feet towards the caster.");
+        effectList.add("All of your nonmagical worn or wielded equipment instantly doubles in size.");
+        effectList.add("If your spell kills the target, gib them.");
+        effectList.add("Your fists grow in size causing your unarmed attacks to deal 1d8 bludgeoning damage for the next minute.");
+        effectList.add("Your size increases by one size category for one minute.");
+        effectList.add("You become frightened of a random colour for one minute. Roll 2d3. 1 = Red, 2 = Blue, 3 = Yellow. Mix the rolls together for the resulting colour.");
+        effectList.add("The next thing you say becomes true.");
+        effectList.add("The next thing you say becomes false.");
+        effectList.add("You crave a turkey sandwich. 1 round later, a turkey sandwich appears on your head.");
+        effectList.add("One random magical item within 30 feet becomes permanently nonmagical.");
+        effectList.add("One random normal item within 30 feet becomes permanently magical.");
+        effectList.add("All nonmagical cloth on the caster cumbles to dust as if it had aged thousands of years.");
+        effectList.add("The spell has a minimum duration of 1 round. Affects spells with an instant duration.");
+        effectList.add("A random heavy object appears in the air above your head. Make a DC 13 Dexterity (Reflex) save or take 4d6 bludgeoning damage.");
+        effectList.add("A burst of confetti and a congratulatory banner appear in front of you with a loud bang.");
+        effectList.add("The target or targets of your spell have to each roll a wild magic effect from the wild magic table.");
+        effectList.add("Roll another wild magic effect, you know what the effect is, and it happens at the beginning of your next turn (Or 6 seconds later).");
+        effectList.add("Roll two more wild magic effects, they occur in the order they were rolled.");
+        effectList.add("Double all the numerical effects of the spell you just cast.");
+        effectList.add("A pole of solid light appears in your hand, it burns anything it touches for 2d6 fire damage except you and your belongings. (Treat as +1 quarterstaff)");
+        effectList.add("Heavy dubstep can be heard playing in a 60 foot radius around you until the end of combat or for 1 minute (Whichever is longer). All creatures within range have diadvantage on Perception checks to hear.");
+        effectList.add("For the next minute, you are compelled to do whatever you are told. You may resist with a DC12 Wisdom (Will) save if told to do something harmful to yourself.");
+        effectList.add("The next time somebody talks to you, and you alone; you are launched 4d10 feet into the air. The fall does not hurt, but hitting a ceiling might.");
+        effectList.add("You absolutely MUST eat the next edible thing you see. Failure to do so results in disadvantage on all d20 rolls for the next hour.");
+        effectList.add("One of your pockets now forever has a cookie in it. Removing the cookie causes another to appear one round later. This effect is specific to you, not your clothing, and can be removed with *remove curse*.");
+        effectList.add("You and your belongings lose all friction with the ground for 1 mintue. Make a DC15 Dexterity (Reflex) save to stay standing, but you cannot move unless you push off of an object.");
+        effectList.add("Your legs shrink to half their length for the next 1d4 hours. Your movement speed is halved during this time.");
+        effectList.add("Your arms are extended out to your sides, perfectly horizontal. You cannot lower them for one minute.");
+        effectList.add("You and a random creature within 60 feet see through the others' eyes for the next 1d6 * 10 minutes.");
+        effectList.add("You feel full for the next 2 days, and don't require food for that period.");
+        effectList.add("You randomly swap places with a creature of the same size category within 30ft.");
+        effectList.add("All creatures within 60ft swap places with another creature of the same size category.");
+        effectList.add("A huge pile of sand appears above your head, burying you. You can breathe, but can't do anything else until two people spend two rounds digging you out.");
+        effectList.add("Uh oh! Reroll all of your stats, one at a time. No rerolls, one roll of 4d5 for each.");
+        effectList.add("The target of your spell is flung 1d6 * 10ft into the air, accompanied with a comical sound effect.");
+        effectList.add("Copy your spell on any targets within range of your choosing.");
+        effectList.add("Roll 1d2; on a 1, your target doubles in size permanently. On a 2, it shrinks to half its size permanently.");
+        effectList.add("From now on whenever someone disagrees with you, you burst into tears for a minute. (You cannot take any actions)");
+        effectList.add("All wild (untrained/unfriended) creatures within 300ft become hostile towards you.");
+        effectList.add("For the next minute, each creature affected by your spell bounces 10ft into the air each time they take a step (every 5ft in combat).");
+        effectList.add("Each creature within 30ft must make a DC13 Wisdom (Will) save or be affected as if you had cast *charm* on them.");
+        effectList.add("You must make a DC13 Wisdom (Will) save or be charmed by a random creature within your vision.");
+        effectList.add("All of your nonmagical belongings cease to exist, even if they are not in your posession.");
+        effectList.add("Your hair turns a vibrant shade of pink that's visible even in complete darkness for a week.");
+        effectList.add("A rift to the ethereal plane opens nearby, letting through 1d4 ghosts. They may or may not be hostile.");
+        effectList.add("The next time you open your mouth to speak, a large bubble comes out of it instead. This takes 18 seconds (3 rounds) during which you cannot act.");
+        effectList.add("5 random creatures within 30ft of you must roll on the wild magic table.");
+        effectList.add("Both you and the target of your spell go blind for an hour.");
+        effectList.add("From now on, when exactly one person is looking at you, they can't see you.");
+        effectList.add("Roll 1d20, all numerical effects on the spell you cast become that number.");
+        effectList.add("All rolled numbers of your spell are the minimum possible result.");
+        effectList.add("You can now understand every spoken language, but can no longer speak (Your spells no longer require verbal components).");
+        effectList.add("You violently explode, dealing 2d10 damage of a random energy type to all creatures within 15ft. You reappear 6 seconds later, gaining the benefits of a long rest.");
+        effectList.add("A random nonmagical item in your possesion becomes fixed in space (as an immovable rod) for 2 hours. If forced to move with a DC20 Strength check, the effect ends early.");
+        effectList.add("A lifelike statue of you materializes nearby. It feels like stone upon touch, but is otherwise a perfect copy.");
+        effectList.add("In your hand appears a random card from the Pathfinder *Deck of Many Things*. The effect of the card triggers immediately."
+                + "\n(The deck has 22 possible outcomes, so have the activator roll 1d22 and count from the top of the table.)");
+        effectList.add("In your hand appears a beautiful +1 wizards staff, complete with a glowing crystal."
+                + "\nYou can no longer cast spells without the staff in your hand, but your spells no longer require any components other than material ones with a listed cost.");
+        effectList.add("You must now make DC15 Wisdom (Will) saves before doing anything, unless you recieve permission from someone."
+                + "\n(Within reason, you don't need permission to breathe.)");
+        effectList.add("You cast another spell you know instead of your intended spell. The target of your spell remains the same, even if it's an invalid target.");
+        effectList.add("Roll a d256-1 three times your hair changes to the RGB value of the result.");
+        effectList.add("You believe you have gained the ability to read minds and that you can hear the negative thoughts that those around you are thinking about you for the next 10 minutes, in reality, you hear negative things about yourself in their voices regardless of what they're actually thinking.");
+        effectList.add("You become willing to pay any price to buy the next item someone offers to sell to you.");
+        effectList.add("You lose instead of gain the next amount of XP you earn.");
+        effectList.add("Your body odor becomes unbearable. For the next 4d4 hours no creature with the ability to smell can willingly stand within 20 ft of you for more than 1 minute.");
+        effectList.add("You suddenly believe that you have wings and have an urge to use them while you can, but that you can only begin flying by jumping off of something for the next 2d8 minutes.");
+        effectList.add("Make a DC15 Intelligence (Will) saving throw or forget your own name until you relearn it from an outside source.");
+        effectList.add("You lose the ability to sleep, but not the need to sleep for the next d2 days.");
+        effectList.add("Everything you say is said in a random language you don't know for the next 1d4 hours.");
+        effectList.add("For the next 1d4 rounds you believe your allies are your enemies and that your enemies are your allies.");
+        effectList.add("All enemies within 60ft of you become resistant to any damage type you use against them for the next minute.");
+        effectList.add("All of your equipment becomes soaked and any attempt to dry it is futile for the next 3d8+2 minutes.");
+        effectList.add("For the next minute your mind is filled with thoughts of futuristic technology that is useless on it's own (Such as a windshield wiper) and have disadvantage on any attacks or ability checks made during that time.");
+        effectList.add("For the next minute you believe every creature within 30ft of you is a ham sandwich.");
+        effectList.add("Any time you try to withdraw an item from a pocket or container with multiple items, you get a random one from that container.");
+        effectList.add("Everybody acts mildly racist towards you, but not other people that share your race.");
+        effectList.add("Everything tastes delicious to you from now on.");
+        effectList.add("You grow some horns, they may be removed by remove curse or a lesser restoration spell.");
+        effectList.add("You go colourblind.");
+        effectList.add("Everything you say OOC, you say IC (even if it makes no sense at times).");
+        effectList.add("A thunderous voice yells \"Alakazam!\" right in your face, which can be heard up to 300ft away.");
+        effectList.add("Your feet turn into those of a chicken for the next day.");
+        effectList.add("You and all of your belongings are transformed into a mirror image of yourself and all your belongings.\n"
+                + "This has no mechanical effect, but any physical features would now be on your other side (Any birthmarks or tattoos would now be reversed and opposite where they were.)"
+                + "Your handedness also changes (if you were right handed you are now left handed, etc.)");
+        effectList.add("You and a random creature within 30ft swap bodies for 1d4 rounds.");
+        effectList.add("Heavy rain falls in a 30ft radius centered on you for 1d4 hours."
+                + "\nThe rain originates 10 feet above you, meaning it could potentially rain inside.");
+        effectList.add("The next time you point at something (For any reason, even as part of targeting a spell), a 30ft sphere of magical darkness appears at that location.");
+        effectList.add("You shrink two size categories for one day");
+        effectList.add("Everyone within 30ft of you forgets your name after their next long rest."
+                + "\nIf they didn't know your name, they learn it after their next long rest.");
+        effectList.add("The next time you say a person's name out loud, you are immediately teleported in front of them.");
+        effectList.add("You lose all motor function for the next 1d4 hours, and appear dead to all observation.");
+        effectList.add("The next time you hit something with a melee weapon attack; you do no damage and your attack bounces off the target with an audible squeak.");
+        effectList.add("You feel weakened, the next amount of damage inflicted upon you is doubled.");
+        effectList.add("A shadow grows beneath you as an ominous slide whistle plays a descending note. Make a DC13 Dexterity (Reflex) saving throw or take 5d10 bludgeoning damage and be knocked prone. Take half on a successful save and move 5ft.");
+        effectList.add("Due to an unfortunate misspelling, an assassin has just been hired to kill you.");
+        effectList.add("The next time you engage an enemy, you are both transported to a shadowy realm and are forced to settle your fight through a life and death card game.");
+        effectList.add("For the next 1d3 hours you feel compelled to relieve yourself of your currency in any way you can.");
+        effectList.add("All your fallen allies rise from the ground nearby as undead to attack you.");
+        effectList.add("You are now known as a wanted criminal in the nearest country, though nobody knows exactly why.");
+        effectList.add("You become fixated on a passing interest. If you level up in the next 1d8 days, the level you gain is in a random class you can multiclass into.");
+        effectList.add("You are transported without your belongings to a featureless white room, 10 feet on all sides. You no longer need to eat, sleep, use the bathroom, or breathe. You spend the next 1d6 years there before reappearing where you came from, 6 seconds after having vanished.");
+        effectList.add("You gain darkvision (30ft, full colour), and sensitivity to sunlight (-2 on all ability checks, saving throws, and attack rolls while in direct sunlight).");
+        effectList.add("You feel the powerful urge to relieve yourself, and suffer a -4 penalty to all ability check, saving throws and attack rolls until you do.");
+        effectList.add("Your current hp becomes half your maximum hp, rounded down.");
+        effectList.add("Henceforth you trigger a wild magic surge when you cast a spell using one of your highest level known spell slots.");
+        effectList.add("Any healing your spell would have done harms, and any harm it would have done heals.");
+        effectList.add("You forget all the spells and cantrips you know and learn an equal number of random spells from another class. (The spells learnt are of the same level as those forgotten.)");
+        effectList.add("All your stats are reduced by 4.");
+        effectList.add("All your stats are reduced by 6 for a day.");
+        effectList.add("You are compelled to follow any directions given to you. You may resist with a DC15 Wisdom (Will) saving throw, but successfully doing so causes you to take 1d6 psychic damage.");
+        effectList.add("You slip backwards in time a bit, forgetting everything that happened in the last 24 hours. If you took damage during that time, you take it again immediately.");
+        effectList.add("You forget a random language you know.");
+        effectList.add("You lose attunement with any magical items that you are attuned to.");
+        effectList.add("All your belongings cease to exist, including those not currently in your possession.");
+        effectList.add("One of your limbs breaks cleanly, take 2d8 damage. Roll a d4; 1 = Left Arm, 2 = Right Arm, 3 = Left Leg, 4 = Right Leg.");
+        effectList.add("You are now upside down.");
+        effectList.add("You become frightened of anything that moves for the next 1d4 rounds.");
+        effectList.add("You are healed 4d8 + your constitution modifier. If this healing would heal you in excess of your maximum health, you are damaged instead of being healed. (If you would be healed 6 points and you are missing 2 hp you do not heal the 2 hp, and instead take 6 damage)");
+        effectList.add("A hostile elemental with a CR equal to the party's CR appears nearby.");
+        effectList.add("For the next 1d4 hours you are trapped in an indestructible sphere of force. The sphere appears as though it were made of glass and is affected by gravity and physics normally.");
+        effectList.add("You are affected as though you have had the levitate spell cast on you with a duration of 1d4 hours. You do not have control of the spell.");
+        effectList.add("You forget the spell you just cast and learn a cantrip of your choice from any class.");
+        effectList.add("You transform into a random tiny animal. Your physical stats become those of the creature, but you otherwise maintain all your class abilities, skills, and mental stats."
+                + "\n(Of course, some skills may be difficult to use in your new form. Mice aren't great at picking locks.)"
+                + "\nIf your new form does not have the ability to speak, you cannot speak.");
+        effectList.add("You feel the powerful urge to relieve yourself, and suffer a -4 penalty to all ability check, saving throws and attack rolls until you do.");
+        effectList.add("Your current hp becomes half your maximum hp, rounded down.");
+        effectList.add("You gain darkvision (30ft, full colour), and sensitivity to sunlight (-2 on all ability checks, saving throws, and attack rolls while in direct sunlight).");
+        effectList.add("You feel weakened, the next amount of damage inflicted upon you is doubled.");
+        effectList.add("A shadow grows beneath you as an ominous slide whistle plays a descending note. Make a DC13 Dexterity (Reflex) saving throw or take 5d10 bludgeoning damage and be knocked prone. Take half on a successful save and move 5ft.");
+        effectList.add("Due to an unfortunate misspelling, an assassin has just been hired to kill you.");
+        effectList.add("The next time you engage an enemy, you are both transported ti a shadowy realm and are forced to settle your fight through a life and death card game.");
+        effectList.add("For the next 1d3 hours you feel compelled to relieve yourself of your currency in any way you can.");
+        effectList.add("All your fallen allies rise from the ground nearby as undead to attack you.");
+        effectList.add("You are now known as a wanted criminal in the nearest country, though nobody knows exactly why.");
+        effectList.add("You become fixated on a passing interest. If you level up in the next 1d8 days, the level you gain is in a random class you can multiclass into.");
+        effectList.add("You are transported without your belongings to a featureless white room, 10 feet on all sides. You do not need to eat, sleep, use the bathroom, or breathe. You spend the next 1d6 years there before reappearing where you came from, 6 seconds after having vanished.");
+        effectList.add("In your hand appears a rod of distinguishing. Any time you point it at something, you are compelled to say what it is. (Even if you wouldn't know what it is)");
+        effectList.add("In your hand appears a rod of extinguishing. Any time you point it at a fire, the fire goes out (Including fire from spells such as *continual flame*).");
+        
+        
+        
+        
+        
+        System.out.println("List size = " + effectList.size());
+    }
+    
+    public String getRandom() {
+        Random random = new Random();
+        random.setSeed(random.nextLong());
+        return effectList.get(random.nextInt(effectList.size()-1));
+    }
+}
