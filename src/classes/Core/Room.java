@@ -4,89 +4,50 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- *
  * @author PC
  */
-public class Room implements java.io.Serializable{
+public class Room implements java.io.Serializable {
     public RoomType roomType = RoomType.EMPTY;
-    public enum RoomType{
+
+
+    public enum Direction {
+        NORTH, SOUTH, EAST, WEST;
+    }
+
+    public enum RoomType {
         LOOT(5), TRAP(15), EMPTY(33), INFESTED(5), HOSTILE(60), SANCTUARY(1), TRAPPEDLOOT(10), GUARDEDLOOT(15), BOSS(4);
-        
+
         public int chance;
+
         RoomType(int chance) {
             this.chance = chance;
         }
 
     }
-    
+
     public boolean exitN = false;
     public boolean exitE = false;
     public boolean exitS = false;
     public boolean exitW = false;
     public boolean exitU = false;
     public boolean exitD = false;
-    
-    
+
+    public boolean visitedByGenerator = false;
+
+
     public ArrayList<Lootable> roomLoot = new ArrayList();
     public ArrayList<Enemy> roomEnemies = new ArrayList();
     public ArrayList<Player> roomPlayers = new ArrayList();
-    
-    public int floor;
-    
+
+    public int xCoord, yCoord;
+
     public Random RNG = new Random();
-    
-    Room(){
-        
-        //Deciding starting exits
-        if (RNG.nextInt(2) == 1) {
-            exitN = true;
-        }
-        if (RNG.nextInt(2) == 1) {
-            exitE = true;
-        }
-        if (RNG.nextInt(2) == 1) {
-            exitS = true;
-        }
-        if (RNG.nextInt(2) == 1) {
-            exitW = true;
-        }
-        
-        //If there are no exits, make one or two
-        if (exitN == false & exitE == false & exitS == false & exitW == false) {
-            int wall = RNG.nextInt(4) + 1;
-            switch (wall){
-                case 1:
-                    exitN = true;
-                    break;
-                case 2:
-                    exitE = true;
-                    break;
-                case 3:
-                    exitS = true;
-                    break;
-                case 4:
-                    exitW = true;
-                    break;
-            }
-            if (RNG.nextInt(4) + 1 == 4) {
-                switch (wall){
-                    case 1:
-                        exitN = true;
-                        break;
-                    case 2:
-                        exitE = true;
-                        break;
-                    case 3:
-                        exitS = true;
-                        break;
-                    case 4:
-                        exitW = true;
-                        break;
-                }
-            }
-        }
-        //Finished deciding exits
-        
+
+    public Room(int x, int y) {
+
+        xCoord = x;
+        yCoord = y;
+
         //Picking a room type
         if (RNG.nextInt(100) < RoomType.SANCTUARY.chance) {
             roomType = RoomType.SANCTUARY;
@@ -106,9 +67,33 @@ public class Room implements java.io.Serializable{
             roomType = RoomType.EMPTY;
         }
         //Finished picking a room type
-        
-        
-        
+
+
     }
-    
+
+
+    public void setExit(Direction dir){
+
+        switch (dir){
+
+            case EAST:
+                exitE = true;
+                return;
+
+            case WEST:
+                exitW = true;
+                return;
+
+            case NORTH:
+                exitN = true;
+                return;
+
+            case SOUTH:
+                exitS = true;
+                return;
+
+        }
+
+    }
+
 }
