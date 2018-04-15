@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
+/**
+ *
+ * @author Alexander Ruston
+ *
+ */
 public class MapGenerator {
 
 

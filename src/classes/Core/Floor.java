@@ -1,5 +1,11 @@
 package classes.Core;
 
+/**
+ *
+ * @author Alexander Ruston
+ *
+ */
+
 public class Floor implements java.io.Serializable{
 
     public Room[][] roomArray;
