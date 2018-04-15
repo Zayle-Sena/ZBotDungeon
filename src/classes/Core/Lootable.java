@@ -1,6 +1,7 @@
 package classes.Core;
 
 /**
+ *
  * @author PC
  */
 public interface Lootable {

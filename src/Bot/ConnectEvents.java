@@ -4,12 +4,13 @@ import net.dv8tion.jda.core.events.*;
 import net.dv8tion.jda.core.hooks.EventListener;
 
 /**
+ *
  * @author PC
  */
-public class ConnectEvents implements EventListener {
-
+public class ConnectEvents implements EventListener{
+    
     @Override
-    public void onEvent(Event event) {
+    public void onEvent(Event event){
         if (event instanceof DisconnectEvent) {
             Main.mainFrame.printToConsole("############### Lost Connection! ###############");
         }
