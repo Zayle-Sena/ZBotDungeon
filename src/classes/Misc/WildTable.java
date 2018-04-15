@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- *
  * @author PC
  */
 public class WildTable {
     public ArrayList<String> effectList = new ArrayList();
-    
-    public WildTable(){
+
+    public WildTable() {
         effectList.add("Roll on this table at the start of each of your turns for the next minute, ignoring this result on subsequent rolls.");
         effectList.add("For the next minute, you can see any invisible creature if you have line of sight to it.");
         effectList.add("A modron chosen and controlled by the DM appears in an unoccupied space withing 5 feet of you, then disappears 1 minute later.");
@@ -280,17 +279,14 @@ public class WildTable {
         effectList.add("You are transported without your belongings to a featureless white room, 10 feet on all sides. You do not need to eat, sleep, use the bathroom, or breathe. You spend the next 1d6 years there before reappearing where you came from, 6 seconds after having vanished.");
         effectList.add("In your hand appears a rod of distinguishing. Any time you point it at something, you are compelled to say what it is. (Even if you wouldn't know what it is)");
         effectList.add("In your hand appears a rod of extinguishing. Any time you point it at a fire, the fire goes out (Including fire from spells such as *continual flame*).");
-        
-        
-        
-        
-        
+
+
         System.out.println("List size = " + effectList.size());
     }
-    
+
     public String getRandom() {
         Random random = new Random();
         random.setSeed(random.nextLong());
-        return effectList.get(random.nextInt(effectList.size()-1));
+        return effectList.get(random.nextInt(effectList.size() - 1));
     }
 }

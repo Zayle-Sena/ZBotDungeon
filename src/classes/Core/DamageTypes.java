@@ -1,7 +1,6 @@
 package classes.Core;
 
 /**
- *
  * @author PC
  */
 public enum DamageTypes {
