@@ -1,16 +1,21 @@
 package Bot;
 
+import classes.Core.Floor;
+import classes.Core.MapGenerator;
 import classes.Core.Room;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.PrivateChannel;
@@ -18,18 +23,17 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
 /**
- *
  * @author PC
  */
 public class MainFrame extends javax.swing.JFrame {
-        
+
     DefaultListModel mdlTextChannels;
     DefaultListModel mdlUsers;
     DefaultComboBoxModel mdlFloors;
     int messageCount = 0;
     MapCanvas mapCanvas;
-    
-    
+
+
     /**
      * Creates new form MainFrame
      */
@@ -78,12 +82,12 @@ public class MainFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout dlgMapLayout = new javax.swing.GroupLayout(dlgMap.getContentPane());
         dlgMap.getContentPane().setLayout(dlgMapLayout);
         dlgMapLayout.setHorizontalGroup(
-            dlgMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+                dlgMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 400, Short.MAX_VALUE)
         );
         dlgMapLayout.setVerticalGroup(
-            dlgMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+                dlgMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 300, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -158,7 +162,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        cbxType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Text Channels", "Users" }));
+        cbxType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Text Channels", "Users"}));
         cbxType.setEnabled(false);
         cbxType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -174,7 +178,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        cbxFloor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0" }));
+        cbxFloor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"0"}));
         cbxFloor.setEnabled(false);
         cbxFloor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -195,92 +199,92 @@ public class MainFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnStart, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(cbxType, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnShow)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnSend))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnPlaying)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnWatching))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(19, 19, 19)
-                                        .addComponent(lblTitle)
-                                        .addGap(189, 189, 189))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(lblFloor)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                .addComponent(cbxFloor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnMap)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(8, 8, 8)
+                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
+                                                .addGap(10, 10, 10)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                                        .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                        .addComponent(btnStart, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                .addComponent(cbxType, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(btnShow)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(btnSend))))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(btnPlaying)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(btnWatching))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addGroup(layout.createSequentialGroup()
+                                                                                .addGap(19, 19, 19)
+                                                                                .addComponent(lblTitle)
+                                                                                .addGap(189, 189, 189))
+                                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                                                .addContainerGap()
+                                                                                .addComponent(lblFloor)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                                                .addComponent(cbxFloor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(btnMap)))
+                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(lblTitle)
-                        .addGap(36, 36, 36))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cbxFloor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblFloor)
-                            .addComponent(btnMap))
-                        .addGap(18, 18, 18)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPlaying)
-                    .addComponent(btnWatching)
-                    .addComponent(cbxType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnShow)
-                            .addComponent(btnSend))
-                        .addGap(16, 16, 16)
-                        .addComponent(lblStatus)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnStart, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane1))
-                .addContainerGap())
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(20, 20, 20)
+                                                .addComponent(lblTitle)
+                                                .addGap(36, 36, 36))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addContainerGap()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(cbxFloor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(lblFloor)
+                                                        .addComponent(btnMap))
+                                                .addGap(18, 18, 18)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnPlaying)
+                                        .addComponent(btnWatching)
+                                        .addComponent(cbxType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(btnShow)
+                                                        .addComponent(btnSend))
+                                                .addGap(16, 16, 16)
+                                                .addComponent(lblStatus)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(btnStart, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(jScrollPane1))
+                                .addContainerGap())
         );
 
         btnStart.getAccessibleContext().setAccessibleName("btnStart");
@@ -302,27 +306,27 @@ public class MainFrame extends javax.swing.JFrame {
         cbxType.setEnabled(true);
         cbxFloor.setEnabled(true);
         btnMap.setEnabled(true);
-        
+
         btnStart.setEnabled(false);
-        
+
         mdlTextChannels = new DefaultListModel();
         mdlUsers = new DefaultListModel();
         mdlFloors = new DefaultComboBoxModel();
-        
+
         for (String s : Main.getChannels()) {
             mdlTextChannels.addElement(s);
         }
-        
+
         for (String s : Main.getUsers()) {
             mdlUsers.addElement(s);
         }
-        
-        for (int i = 0; i < Main.connection.commandListener.game.Map[1].length; i++){
+
+        for (int i = 0; i < Main.connection.commandListener.game.floors.size(); i++) {
             mdlFloors.addElement(i + 1);
         }
-        
+
         cbxFloor.setModel(mdlFloors);
-               
+
         refreshChannels();
     }//GEN-LAST:event_btnStartActionPerformed
 
@@ -333,7 +337,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
         printToConsole(result);
         btnStart.setEnabled(true);
-        
+
         btnStop.setEnabled(false);
         btnPlaying.setEnabled(false);
         btnWatching.setEnabled(false);
@@ -342,9 +346,9 @@ public class MainFrame extends javax.swing.JFrame {
         cbxType.setEnabled(false);
         cbxFloor.setEnabled(false);
         btnMap.setEnabled(false);
-        
+
         mdlTextChannels.clear();
-        
+
     }//GEN-LAST:event_btnStopActionPerformed
 
     private void btnPlayingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayingActionPerformed
@@ -382,16 +386,16 @@ public class MainFrame extends javax.swing.JFrame {
             //If selecting a Users private channel
             User user = Main.getUser(lstChannels.getSelectedValue());
             PrivateChannel channel = user.openPrivateChannel().complete();
-            
+
             for (Message message : channel.getHistory().retrievePast(100).complete()) {
                 String s = txtConsole.getText();
                 txtConsole.setText("\n[" + message.getAuthor().getName() + "]: \t" + message.getContent() + s);
             }
-            
+
             //If selecting a Text Channel
         } else {
             TextChannel channel = Main.getChannel(lstChannels.getSelectedValue());
-            
+
             for (Message message : channel.getHistory().retrievePast(100).complete()) {
                 String s = txtConsole.getText();
                 txtConsole.setText("\n[" + message.getAuthor().getName() + "]: \t" + message.getContent() + s);
@@ -405,18 +409,17 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMapActionPerformed
         mapCanvas = new MapCanvas();
-        mapCanvas.setPreferredSize(new Dimension(900,900));
+        mapCanvas.setPreferredSize(new Dimension(900, 900));
         Container cp = dlgMap.getContentPane();
         cp.add(mapCanvas);
-        mapCanvas.setSize(new Dimension(1100,1100));
+        mapCanvas.setSize(new Dimension(1100, 1100));
         mapCanvas.setVisible(true);
         dlgMap.setVisible(true);
-            
-            
+
+
     }//GEN-LAST:event_btnMapActionPerformed
-    
-    
-    
+
+
     /**
      * @param args the command line arguments
      */
@@ -477,65 +480,75 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField txtStatus;
     // End of variables declaration//GEN-END:variables
 
-public void printToConsole(String string) {
-    int limit = 250;
-    if (messageCount > limit) {
-        txtConsole.setText("Message limit reached. (" + limit + ")\nConsole cleared.");
-        messageCount = 0;
+    public void printToConsole(String string) {
+        int limit = 250;
+        if (messageCount > limit) {
+            txtConsole.setText("Message limit reached. (" + limit + ")\nConsole cleared.");
+            messageCount = 0;
+        }
+        txtConsole.setText(txtConsole.getText() + string + "\n");
+        messageCount += 1;
     }
-    txtConsole.setText(txtConsole.getText() + string + "\n");
-    messageCount += 1;
-}
-public void refreshChannels(){
-    if (cbxType.getSelectedItem().toString().equals("Users")) {
+
+    public void refreshChannels() {
+        if (cbxType.getSelectedItem().toString().equals("Users")) {
             lstChannels.setModel(mdlUsers);
         } else {
             lstChannels.setModel(mdlTextChannels);
         }
+    }
+
+    public String getSelectedUserId() {
+        String value = lstChannels.getSelectedValue();
+        if (value == null) {
+            return null;
+        }
+        Matcher id = Pattern.compile("\\w+(\\d+)").matcher(value);
+        String user;
+
+        if (id.find()) {
+            user = id.group();
+        } else {
+            return null;
+        }
+
+        return user;
+    }
 }
 
-public String getSelectedUserId() {
-    String value = lstChannels.getSelectedValue();
-    if (value == null) {
-        return null;
-    }
-    Matcher id = Pattern.compile("\\w+(\\d+)").matcher(value);
-    String user;
-    
-    if (id.find()) {
-        user = id.group();
-    } else {
-        return null;
-    }
-    
-    return user;
-}
-}
-class MapCanvas extends JPanel{
+class MapCanvas extends JPanel {
     @Override
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Room map[][][] = Main.connection.commandListener.game.Map;
+        ArrayList<Floor> allFloors = Main.connection.commandListener.game.floors;
+        Floor chosenFloor = allFloors.get(Integer.parseInt(MainFrame.cbxFloor.getSelectedItem().toString()) - 1);
         int size = 10;
-        int[] coords = {10,10};
-        
+        int[] coords = {10, 10};
+
         g.setColor(Color.black);
         System.out.println("Drawn Line");
-        
-        for (int z = 0; z < map[0][0].length ; z++){
-            for (int x = 0; x < map.length; x++){
-                Room room = map[x][Integer.parseInt(MainFrame.cbxFloor.getSelectedItem().toString())-1][z];
-                if (!room.exitN){
+
+        for (int z = 0; z < chosenFloor.roomArray[0].length; z++) {
+            for (int x = 0; x < chosenFloor.roomArray.length; x++) {
+                Room room = chosenFloor.roomArray[x][z];
+
+                if (room.visitedByGenerator){
+
+                   // g.drawLine(coords[0], coords[1], coords[0] + size, coords[1] + size);
+
+                }
+
+                if (!room.exitN) {
                     g.drawLine(coords[0], coords[1], coords[0] + size, coords[1]);
                 }
-                if (!room.exitE){
-                    g.drawLine(coords[0], coords[1] + size, coords[0] + size, coords[1] + size);
-                }
-                if (!room.exitS){
+                if (!room.exitE) {
                     g.drawLine(coords[0] + size, coords[1], coords[0] + size, coords[1] + size);
                 }
-                if (!room.exitW){
-                   g.drawLine(coords[0], coords[1], coords[0], coords[1] + size);
+                if (!room.exitS) {
+                    g.drawLine(coords[0], coords[1] + size, coords[0] + size, coords[1] + size);
+                }
+                if (!room.exitW) {
+                    g.drawLine(coords[0], coords[1], coords[0], coords[1] + size);
                 }
                 coords[0] += size;
                 if (x == 99) {
@@ -545,7 +558,7 @@ class MapCanvas extends JPanel{
             }
         }
         System.out.println("Floor " + MainFrame.cbxFloor.getSelectedItem().toString() + " finished drawing");
-        
+
     }
 }
 
