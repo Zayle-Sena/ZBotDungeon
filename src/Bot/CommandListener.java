@@ -76,7 +76,7 @@ public class CommandListener extends ListenerAdapter{
                 fileIn = new FileInputStream(spellFile);
                 objectIn = new ObjectInputStream(fileIn);
             
-                printToConsole("Game found! Loading!");
+                printToConsole("Notes found! Loading!");
                 SL = (NoteList)objectIn.readObject();
             fileIn.close();
             objectIn.close();
@@ -84,7 +84,7 @@ public class CommandListener extends ListenerAdapter{
             //If there isn't
             } else {
                 //Start new game
-                printToConsole("Spell List not found, starting new game.");
+                printToConsole("Notes not found, starting new instance.");
                 SL = new NoteList();
             }  
         } catch (Exception e) {
