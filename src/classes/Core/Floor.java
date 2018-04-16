@@ -3,7 +3,7 @@ package classes.Core;
 /**
  *
  * @author Alexander Ruston
- * Comment
+ * Comment the second
  *
  */
 

@@ -14,7 +14,6 @@ public class MapGenerator {
 
     public Room[][] backtrackingGenerator(int sizeX, int sizeY, int floor){
 
-        int startX, startY;
         Room[][] allRooms = new Room[sizeX][sizeY];
 
         //Initialise all rooms
@@ -26,15 +25,13 @@ public class MapGenerator {
 
         Stack<Room> backtrackStack = new Stack<>();
 
-        ArrayList<Room.Direction> dirsToVisit = new ArrayList<>();
+        ArrayList<Room.Direction> dirsToVisit;
         Room currentRoom = allRooms[49][49];
         currentRoom.visitedByGenerator = true;
 
+        //Backtracking Algorithm
         boolean isGenerating = true;
-
         while (isGenerating) {
-
-            //System.out.println("Current room coords: " + currentRoom.xCoord + " , " + currentRoom.yCoord);
 
             dirsToVisit = getUnvisitedDirections(currentRoom,allRooms);
 
@@ -44,7 +41,6 @@ public class MapGenerator {
 
                 Random rand = new Random();
                 Room.Direction visitingDir = dirsToVisit.get(rand.nextInt(dirsToVisit.size()));
-                System.out.println("Carving a path: " + visitingDir.toString());
                 currentRoom.setExit(visitingDir);
 
                 Room visitngRoom = getRoomAt(currentRoom,visitingDir,allRooms);
@@ -60,28 +56,12 @@ public class MapGenerator {
             }
         }
 
-        Room firstRoom = allRooms[0][0];
-
-        if(firstRoom.exitS){
-            System.out.println("OPEN SOUTH");
-        }
-        if(firstRoom.exitN){
-            System.out.println("OPEN NORTH");
-        }if(firstRoom.exitE){
-            System.out.println("OPEN EARTH");
-        }
-        if(firstRoom.exitW){
-            System.out.println("OPEN WEST");
-        }
-
-
-
         return allRooms;
 
     }
 
 
-    public ArrayList<Room.Direction> getUnvisitedDirections(Room currentRoom, Room[][] allRooms){
+    private ArrayList<Room.Direction> getUnvisitedDirections(Room currentRoom, Room[][] allRooms){
 
         ArrayList<Room.Direction> univisitedRooms = new ArrayList<>();
 
@@ -135,7 +115,7 @@ public class MapGenerator {
         return null;
     }
 
-    public Room.Direction getOpposite(Room.Direction dir){
+    private Room.Direction getOpposite(Room.Direction dir){
 
         switch (dir){
 

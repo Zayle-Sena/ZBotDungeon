@@ -12,11 +12,15 @@ import java.util.Random;
  * @author Zayle Sena
  */
 public class GameInstance implements java.io.Serializable {
+
+    private transient GameRunner runner;
+
     transient MapGenerator generator = new MapGenerator();
     public ArrayList<Floor> floors = new ArrayList();
+
     int initialFloors = 3;
     public ArrayList<Player> allPlayers = new ArrayList();
-    
+
     Random RNG = new Random();
 
     DecimalFormat formatter = new DecimalFormat("#,###");
@@ -25,9 +29,13 @@ public class GameInstance implements java.io.Serializable {
 
     public GameInstance(CommandListener cl) {
 
-        for (int i = 0; i < initialFloors; i++){
+        runner = new GameRunner(this);
+        Thread gameThread = new Thread(runner);
+        gameThread.start();
+
+        for (int i = 0; i < initialFloors; i++) {
             Floor newFloor = new Floor();
-            newFloor.setFloor(generator.backtrackingGenerator(100,100,i));
+            newFloor.setFloor(generator.backtrackingGenerator(100, 100, i));
             floors.add(newFloor);
         }
 
@@ -37,7 +45,7 @@ public class GameInstance implements java.io.Serializable {
         for (int y = 0; y < floors.size(); y++) {
             for (int z = 0; z < 100; z++) {
                 for (int x = 0; x < 100; x++) {
-                    Room room = floors.get(y).getRoom(x,z);
+                    Room room = floors.get(y).getRoom(x, z);
                     switch (room.roomType) {
                         case LOOT:
                             LOOT += 1;
@@ -65,18 +73,6 @@ public class GameInstance implements java.io.Serializable {
                             break;
 
                     }
-                    if (x == 0) {
-                        room.exitW = false;
-                    }
-                    if (x == 99) {
-                        room.exitE = false;
-                    }
-                    if (z == 0) {
-                        room.exitN = false;
-                    }
-                    if (z == 99) {
-                        room.exitS = false;
-                    }
                 }
             }
         }
@@ -93,134 +89,182 @@ public class GameInstance implements java.io.Serializable {
         cl.printToConsole(s);
     }
 
-        public void spawnPlayer(String name, String id) {
-            int x = RNG.nextInt(100);
-            int y = RNG.nextInt(100);
-            Room startingRoom = floors.get(0).roomArray[x][y]; //Pick the magic (starting) room
-            
-            while (startingRoom.roomType != RoomType.SANCTUARY) {
-                x = RNG.nextInt(100);
-                y = RNG.nextInt(100);
-                startingRoom = floors.get(0).roomArray[x][y];
-            }
-            
-            Player player = new Player(); //Create the player
-            
-            player.name = name;
-            player.playerID = id;
-            player.currentRoom = startingRoom; //Add the room to the player
-            
-            allPlayers.add(player); //Add the player to the global list of players
-            startingRoom.roomPlayers.add(player); //And the player to the room
-            System.out.println(name + " spawned at X: " + x + ", Y: " + y + " on floor one.");
+    public void gameUpdate() {
+
+        //PUT ALL TIME BASED UPDATES HERE:
+        //System.out.println("Game tick!");
+
+    }
+
+    public void stopGame() {
+
+        //May need to wait until the last tick to shutdown cleanly
+        runner.isRunning = false;
+
+    }
+
+    public void spawnPlayer(String name, String id) {
+        int x = RNG.nextInt(100);
+        int y = RNG.nextInt(100);
+        Room startingRoom = floors.get(0).roomArray[x][y]; //Pick the magic (starting) room
+
+        while (startingRoom.roomType != RoomType.SANCTUARY) {
+            x = RNG.nextInt(100);
+            y = RNG.nextInt(100);
+            startingRoom = floors.get(0).roomArray[x][y];
         }
-        
-        public Player getPlayerById(String playerId) {
-            for (Player p : allPlayers) {
-                if (p.playerID.equals(playerId)) {
-                    return p;
+
+        Player player = new Player(); //Create the player
+
+        player.name = name;
+        player.playerID = id;
+        player.currentRoom = startingRoom; //Add the room to the player
+
+        allPlayers.add(player); //Add the player to the global list of players
+        startingRoom.roomPlayers.add(player); //And the player to the room
+        System.out.println(name + " spawned at X: " + x + ", Y: " + y + " on floor one.");
+    }
+
+    public Player getPlayerById(String playerId) {
+        for (Player p : allPlayers) {
+            if (p.playerID.equals(playerId)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public Player getPlayerByName(String playerName) {
+        for (Player p : allPlayers) {
+            if (p.name.toLowerCase().contains(playerName.toLowerCase())) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public Room getRoom(int x, int y, int floor) {
+        return floors.get(floor).getRoom(x, y);
+    }
+
+    public boolean checkMove(Player player, String direction) {
+        switch (direction) {
+            case "n": //north is y-1
+                if (player.currentRoom.exitN) {
+                    return true;
                 }
-            }
-            return null;
-        }
-        public Player getPlayerByName(String playerName) {
-            for (Player p : allPlayers) {
-                if (p.name.toLowerCase().contains(playerName.toLowerCase())) {
-                    return p;
+                break;
+            case "e": //east is x+1
+                if (player.currentRoom.exitE) {
+                    return true;
                 }
-            }
-            return null;
+                break;
+            case "s": //south is y+1
+                if (player.currentRoom.exitS) {
+                    return true;
+                }
+                break;
+            case "w": //west is x-1
+                if (player.currentRoom.exitW) {
+                    return true;
+                }
+                break;
         }
-        
-        public Room getRoom(int x, int y, int floor) {
-            return floors.get(floor).getRoom(x, y);
+        return false;
+    }
+
+    public void movePlayer(Player player, String direction) {
+        Room startingRoom = player.currentRoom;
+        int startingX = startingRoom.xCoord;
+        int startingY = startingRoom.yCoord;
+        int startingFloor = startingRoom.floor;
+        Room destination = startingRoom;
+
+        switch (direction) {
+            case "n": //north is y-1
+                destination = getRoom(startingX, startingY - 1, startingFloor);
+                break;
+            case "e": //east is x+1
+                destination = getRoom(startingX + 1, startingY, startingFloor);
+                break;
+            case "s": //south is y+1
+                destination = getRoom(startingX, startingY + 1, startingFloor);
+                break;
+            case "w": //west is x-1
+                destination = getRoom(startingX - 1, startingY, startingFloor);
+                break;
         }
-        
-        public boolean checkMove(Player player, String direction) {
-            switch (direction) {
-                case "n": //north is y-1
-                    if (player.currentRoom.exitN) {
-                        return true;
-                    }
-                    break;
-                case "e": //east is x+1
-                    if (player.currentRoom.exitE) {
-                        return true;
-                    }
-                    break;
-                case "s": //south is y+1
-                    if (player.currentRoom.exitS) {
-                        return true;
-                    }
-                    break;
-                case "w": //west is x-1
-                    if (player.currentRoom.exitW) {
-                        return true;
-                    }
-                    break;
-            }
-            return false;
+        player.currentRoom.roomPlayers.remove(player); //Leave the previous room
+
+        player.currentRoom = destination; //Change the room reference in the player
+        player.currentRoom.roomPlayers.add(player); //Add the player reference in the room
+
+        Main.mainFrame.printToConsole(player.name + " moved (" + direction + " from X: " + startingRoom.xCoord + ", Y: " + startingRoom.yCoord + " to X: " + destination.xCoord + ", Y: " + destination.yCoord);
+    }
+
+    public void teleportAToB(Player a, Player b) {
+        a.currentRoom.roomPlayers.remove(a);
+        a.currentRoom = b.currentRoom;
+        b.currentRoom.roomPlayers.add(a);
+    }
+
+    public String lookAround(Player player) {
+        String result;
+        Room room = player.currentRoom;
+
+        result = player.currentRoom.roomDesc;
+        result += "\n<Players:> ";
+        for (Player p : player.currentRoom.roomPlayers) {
+            result += "<" + p.name + ">";
         }
-        public void movePlayer(Player player, String direction){
-            Room startingRoom = player.currentRoom;
-            int startingX = startingRoom.xCoord;
-            int startingY = startingRoom.yCoord;
-            int startingFloor = startingRoom.floor;
-            Room destination = startingRoom;
-            
-            switch (direction) {
-                case "n": //north is y-1
-                    destination = getRoom(startingX, startingY-1, startingFloor);
-                    break;
-                case "e": //east is x+1
-                    destination = getRoom(startingX+1, startingY, startingFloor);
-                    break;
-                case "s": //south is y+1
-                    destination = getRoom(startingX, startingY+1, startingFloor);
-                    break;
-                case "w": //west is x-1
-                    destination = getRoom(startingX-1, startingY, startingFloor);
-                    break;
-            }
-            player.currentRoom.roomPlayers.remove(player); //Leave the previous room
-            
-            player.currentRoom = destination; //Change the room reference in the player
-            player.currentRoom.roomPlayers.add(player); //Add the player reference in the room
-            
-            Main.mainFrame.printToConsole(player.name + " moved (" + direction + " from X: " + startingRoom.xCoord + ", Y: " + startingRoom.yCoord + " to X: " + destination.xCoord + ", Y: " + destination.yCoord);
+
+        result += "\n\n<Exits:>";
+
+        if (room.exitN) {
+            result += " NORTH";
         }
-        public void teleportAToB(Player a, Player b) {
-            a.currentRoom.roomPlayers.remove(a);
-            a.currentRoom = b.currentRoom;
-            b.currentRoom.roomPlayers.add(a);
+        if (room.exitE) {
+            result += " EAST";
         }
-        
-        public String lookAround(Player player) {
-            String result;
-            Room room = player.currentRoom;
-            
-            result = player.currentRoom.roomDesc;
-            result += "\n<Players:> ";
-            for (Player p : player.currentRoom.roomPlayers) {
-                result += "<" + p.name + ">";
-            }
-            
-            result += "\n\n<Exits:>";
-            
-            if (room.exitN) {
-                result += " NORTH";
-            }
-            if (room.exitE) {
-                result += " EAST";
-            }
-            if (room.exitS) {
-                result += " SOUTH";
-            }
-            if (room.exitW) {
-                result += " WEST";
-            }
-            
-            return result;
+        if (room.exitS) {
+            result += " SOUTH";
         }
+        if (room.exitW) {
+            result += " WEST";
+        }
+
+        return result;
+    }
+
+
+
+}
+
+class GameRunner implements Runnable, java.io.Serializable {
+
+    private GameInstance main;
+    public boolean isRunning = false;
+
+    public GameRunner(GameInstance gameMain) {
+        main = gameMain;
+        isRunning = true;
+    }
+
+    @Override
+    public void run() {
+
+        long lastTime = System.currentTimeMillis();
+
+        do {
+            long nowTime = System.currentTimeMillis();
+            long unprocessedTicks = (nowTime - lastTime) / 1000; //One unprocessed tick for every second
+
+            if (unprocessedTicks >= 1) {
+                main.gameUpdate();
+                unprocessedTicks = 0;
+                lastTime = nowTime;
+            }
+        } while (isRunning);
+    }
 
 }

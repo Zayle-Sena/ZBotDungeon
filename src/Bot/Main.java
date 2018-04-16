@@ -30,6 +30,7 @@ public class Main {
 
     public static String stop() {
         try {
+            mainFrame.game.stopGame();
             connection.stop();
         } catch (Exception e) {
             return "ZBot failed to stop properly!";
@@ -93,3 +94,4 @@ public class Main {
         return target;
     }
 }
+
