@@ -10,7 +10,7 @@ public class Monster implements java.io.Serializable {
     public String name = "Not Defined";
     public String desc = "Not Defined";
 
-    public int hp = 100;
+    public int hp = 50;
     private int points = 0;
 
     public int getPoints() {
@@ -29,8 +29,8 @@ public class Monster implements java.io.Serializable {
         this.points -= points;
     }
 
-    public int minDamage = 0;
-    public int maxDamage = 0;
+    public int minDamage = 5;
+    public int maxDamage = 10;
 
     public int getDamage() {
         return RNG.nextInt(maxDamage - minDamage) + minDamage + 1;

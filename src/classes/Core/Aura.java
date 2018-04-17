@@ -4,7 +4,9 @@ package classes.Core;
  * @author PC
  */
 public abstract class Aura {
-    public String affect(Monster target) {
-        return "Generic aura does a thing!";
-    }
+    
+    public boolean beneficial = true;
+    public String name = "Unnamed Aura";
+    
+    public abstract String affect(Monster target);
 }

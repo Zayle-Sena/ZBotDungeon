@@ -31,7 +31,9 @@ public class CommandListener extends ListenerAdapter {
     public String primedPrivate;
     public String primedPublic;
     public ArrayList<ArrayList<String>> primedPeople = new ArrayList();
-
+    
+    Player usingPlayer;
+    
     Random random = new Random();
     int wmChance = 15;
     String wme;
@@ -213,7 +215,7 @@ public class CommandListener extends ListenerAdapter {
             if (server == null) {
                 server = "a private message";
             }
-            whisper(author.getName() + " mentioned you in " + server + ".", event, Constants.ownerID);
+            whisper(author.getName() + " mentioned you in " + server + ".", event, Constants.adminIds[0]);
         }
         if ((messageText.toLowerCase().contains("luvia") | messageText.toLowerCase().contains("undyne")) & !author.getId().equals(Constants.ZBotID)) {
             String server = null;
@@ -337,22 +339,22 @@ public class CommandListener extends ListenerAdapter {
                     }
 
                     if (wm >= wmChance - level) {
-                        if (primedPrivate != null & author.getId().equals(Constants.ownerID)) {
+                        if (primedPrivate != null & senderIsAdmin(event)) {
                             wme = primedPrivate;
                             primedPrivate = null;
-                            if (event.getChannel() instanceof PrivateChannel & !author.getId().equals(Constants.ownerID)) {
-                                whisper(author.getName() + " just rolled a successful wild magic! \n " + wme, event, Constants.ownerID);
+                            if (event.getChannel() instanceof PrivateChannel & senderIsAdmin(event)) {
+                                whisper(author.getName() + " just rolled a successful wild magic! \n " + wme, event, Constants.adminIds[0]);
                             }
-                        } else if (primedPublic != null & !author.getId().equals(Constants.ownerID)) {
+                        } else if (primedPublic != null & senderIsAdmin(event)) {
                             wme = primedPublic;
                             primedPublic = null;
-                            if (event.getChannel() instanceof PrivateChannel & !author.getId().equals(Constants.ownerID)) {
-                                whisper(author.getName() + " just rolled a successful wild magic! \n " + wme, event, Constants.ownerID);
+                            if (event.getChannel() instanceof PrivateChannel & senderIsAdmin(event)) {
+                                whisper(author.getName() + " just rolled a successful wild magic! \n " + wme, event, Constants.adminIds[0]);
                             }
                         } else {
                             wme = wildMagic.getRandom();
-                            if (event.getChannel() instanceof PrivateChannel & !author.getId().equals(Constants.ownerID)) {
-                                whisper(author.getName() + " just rolled a successful wild magic! \n " + wme, event, Constants.ownerID);
+                            if (event.getChannel() instanceof PrivateChannel & senderIsAdmin(event)) {
+                                whisper(author.getName() + " just rolled a successful wild magic! \n " + wme, event, Constants.adminIds[0]);
                             }
                         }
 
@@ -360,7 +362,7 @@ public class CommandListener extends ListenerAdapter {
                             ArrayList<String> chunk = primedPeople.get(i);
                             if (event.getJDA().getUserById(chunk.get(0)) != null) {
                                 wme = chunk.get(1);
-                                whisper(author.getName() + " just rolled a successful wild magic! \n " + wme, event, Constants.ownerID);
+                                whisper(author.getName() + " just rolled a successful wild magic! \n " + wme, event, Constants.adminIds[0]);
                                 primedPeople.remove(i);
                             }
                         }
@@ -378,10 +380,10 @@ public class CommandListener extends ListenerAdapter {
                 case "forcewildmagic":
                 case "forcewild":
                 case "fwm":
-                    if (primedPrivate != null & author.getId().equals(Constants.ownerID)) {
+                    if (primedPrivate != null & author.getId().equals(Constants.adminIds)) {
                         wme = primedPrivate;
                         primedPrivate = null;
-                    } else if (primedPublic != null & !author.getId().equals(Constants.ownerID)) {
+                    } else if (primedPublic != null & !author.getId().equals(Constants.adminIds)) {
                         wme = primedPublic;
                         primedPublic = null;
                     } else {
@@ -428,27 +430,23 @@ public class CommandListener extends ListenerAdapter {
                     switch (direction){
                         case "n":
                             respondIn(markdown("<" + movingPlayer.name + "> goes through a door to the north"), event);
-                            game.movePlayer(movingPlayer, "n");
+                            moveResult += "\n" + game.movePlayer(movingPlayer, "n");
                             notifyOthers(markdown("<" + movingPlayer.name + "> comes from a door to the south"), event);
-                            moveResult += "\n" + game.lookAround(movingPlayer);
                             break;
                         case "e":
                             respondIn(markdown("<" + movingPlayer.name + "> goes through a door to the east"), event);
-                            game.movePlayer(movingPlayer, "e");
+                            moveResult += "\n" + game.movePlayer(movingPlayer, "e");
                             notifyOthers(markdown("<" + movingPlayer.name + "> comes from a door to the west"), event);
-                            moveResult += "\n" + game.lookAround(movingPlayer);
                             break;
                         case "s":
                             respondIn(markdown("<" + movingPlayer.name + "> goes through a door to the south"), event);
-                            game.movePlayer(movingPlayer, "s");
+                            moveResult += "\n" + game.movePlayer(movingPlayer, "s");
                             notifyOthers(markdown("<" + movingPlayer.name + "> comes from a door to the north"), event);
-                            moveResult += "\n" + game.lookAround(movingPlayer);
                             break;
                         case "w":
                             respondIn(markdown("<" + movingPlayer.name + "> goes through a door to the west"), event);
-                            game.movePlayer(movingPlayer, "w");
+                            moveResult += "\n" + game.movePlayer(movingPlayer, "w");
                             notifyOthers(markdown("<" + movingPlayer.name + "> comes from a door to the east"), event);
-                            moveResult += "\n" + game.lookAround(movingPlayer);
                             break;
                     }
                     respond(markdown(moveResult), event);
@@ -497,7 +495,7 @@ public class CommandListener extends ListenerAdapter {
             printToConsole("Command: " + command);
 
             //Zayle's commands go here;
-            if (author.getId().equals(Constants.ownerID) | author.getId().equals(Constants.ZBotID)) {
+            if (senderIsAdmin(event) | author.getId().equals(Constants.ZBotID)) {
                 switch (clean(command)) {
                     case "save":
                         if (saveGame()) {
@@ -621,16 +619,25 @@ public class CommandListener extends ListenerAdapter {
                         
                     case "tpto":
                         Player tptoTarget = game.getPlayerByName(messageText.replaceFirst(command, "").trim());
-                        Player user = game.getPlayerById(author.getId());
+                        usingPlayer = game.getPlayerById(author.getId());
                         
-                        if (tptoTarget != null & user != null) {
-                            game.teleportAToB(user, tptoTarget);
-                            respond(markdown(user.name + " has teleported to " + tptoTarget.name), event);
+                        if (tptoTarget != null & usingPlayer != null) {
+                            game.teleportAToB(usingPlayer, tptoTarget);
+                            respond(markdown(usingPlayer.name + " has teleported to " + tptoTarget.name), event);
                         } else {
                             respond("`Target not found, or you haven't spawned.`", event);
                         }
+                        break;
+                    case "testaura":
+                        usingPlayer = game.getPlayerById(author.getId());
                         
+                        boolean beneficial = true;
                         
+                        if (messageText.replaceFirst(command, "").trim().contains("f")) {
+                            beneficial = false;
+                        }
+                        
+                        respond(game.giveTestAura(usingPlayer, beneficial), event);
                         break;
                             
 
@@ -882,5 +889,14 @@ public class CommandListener extends ListenerAdapter {
 
         printToConsole(string + "\n");
         return string;
+    }
+    
+    public boolean senderIsAdmin(MessageReceivedEvent e) {
+        for (String s :Constants.adminIds) {
+            if (s.equals(e.getAuthor().getId())){
+                return true;
+            }
+        }
+        return false;
     }
 }//closing the class

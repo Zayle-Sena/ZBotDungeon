@@ -1,7 +1,7 @@
 package classes.Core;
 
 import Bot.CommandListener;
-import Bot.Main;
+import classes.Core.Auras.*;
 import classes.Core.Room.RoomType;
 
 import java.text.DecimalFormat;
@@ -173,7 +173,9 @@ public class GameInstance implements java.io.Serializable {
         return false;
     }
 
-    public void movePlayer(Player player, String direction) {
+    public String movePlayer(Player player, String direction) {
+        String output = "";
+        
         Room startingRoom = player.currentRoom;
         int startingX = startingRoom.xCoord;
         int startingY = startingRoom.yCoord;
@@ -198,8 +200,24 @@ public class GameInstance implements java.io.Serializable {
 
         player.currentRoom = destination; //Change the room reference in the player
         player.currentRoom.roomPlayers.add(player); //Add the player reference in the room
+        
+        for (Aura a : player.auras) {
+            if (a.beneficial) {
+                for (Monster p : player.currentRoom.roomPlayers) {
+                    output += a.affect(p) + "\n";
+                }
+            } else {
+                for (Monster e : player.currentRoom.roomEnemies) {
+                    output += a.affect(e) + "\n";
+                }
+            }
+        }
+        
+        output += "\n" + lookAround(player);
 
-        Main.mainFrame.printToConsole(player.name + " moved (" + direction + " from X: " + startingRoom.xCoord + ", Y: " + startingRoom.yCoord + " to X: " + destination.xCoord + ", Y: " + destination.yCoord);
+        System.out.println(player.name + " moved (" + direction + " from X: " + startingRoom.xCoord + ", Y: " + startingRoom.yCoord + " to X: " + destination.xCoord + ", Y: " + destination.yCoord);
+        
+        return output;
     }
 
     public void teleportAToB(Player a, Player b) {
@@ -234,6 +252,11 @@ public class GameInstance implements java.io.Serializable {
         }
 
         return result;
+    }
+    
+    public String giveTestAura(Player target, boolean b){
+        target.auras.add(new TestAura(b));
+        return "Given test aura to " + target.name;
     }
 
 
