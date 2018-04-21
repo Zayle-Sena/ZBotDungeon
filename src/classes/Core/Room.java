@@ -9,7 +9,7 @@ import java.util.Random;
 public class Room implements java.io.Serializable {
     public RoomType roomType = RoomType.EMPTY;
 
-    public String roomDesc = "This room is empty, far too empty! It wasn't generated correctly!";
+    public String roomDesc = "This room is empty -- far too empty! It wasn't generated correctly!";
 
     public enum Direction {
         NORTH, SOUTH, EAST, WEST;
@@ -97,5 +97,7 @@ public class Room implements java.io.Serializable {
         }
 
     }
+    
+    public String onExit(Player player){return null;} //If this returns anything other than null, it will cancel the player's movement. Used for traps and the like.
 
 }

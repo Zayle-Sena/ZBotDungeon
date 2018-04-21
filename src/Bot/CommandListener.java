@@ -26,7 +26,7 @@ public class CommandListener extends ListenerAdapter {
     FileInputStream fileIn;
     ObjectInputStream objectIn;
 
-    public NoteList SL;
+    public NoteList NoteList;
     public WildTable wildMagic;
     public String primedPrivate;
     public String primedPublic;
@@ -45,7 +45,7 @@ public class CommandListener extends ListenerAdapter {
 
     CommandListener() {
         boolean loadSuccess = false;
-        SL = new NoteList();
+        NoteList = new NoteList();
         wildMagic = new WildTable();
         //Trying to load the game
         try {
@@ -82,7 +82,7 @@ public class CommandListener extends ListenerAdapter {
                 objectIn = new ObjectInputStream(fileIn);
             
                 printToConsole("Notes found! Loading!");
-                SL = (NoteList)objectIn.readObject();
+                NoteList = (NoteList)objectIn.readObject();
             fileIn.close();
             objectIn.close();
             loadSuccess = true;
@@ -90,7 +90,7 @@ public class CommandListener extends ListenerAdapter {
             } else {
                 //Start new game
                 printToConsole("Notes not found, starting new instance.");
-                SL = new NoteList();
+                NoteList = new NoteList();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,11 +102,11 @@ public class CommandListener extends ListenerAdapter {
             gameFile.delete();
             game = new GameInstance(this);
         }
-        if (SL == null) {
+        if (NoteList == null) {
             //This will run if the game is found to be incompatible
             printToConsole("Spell List corrupted! Creating new Spell List.");
             spellFile.delete();
-            SL = new NoteList();
+            NoteList = new NoteList();
         }
 
 
@@ -146,6 +146,10 @@ public class CommandListener extends ListenerAdapter {
         String messageText = message.getContent();
         User author = message.getAuthor();
         String authorName = author.getName();
+        
+        Player player = game.getPlayerById(author.getId());
+        String noChar = "You don't have a character in the maze!\n"
+                        + "Use \"" + Constants.ZBotPrefix + "spawn\" to join.";
 
         if (!author.getId().equals(Constants.ZBotID) | messageText.contains(Constants.ZBotPrefix)) {
             printToConsole("Message received from " + authorName + "(" + author.getId() + ")");
@@ -198,7 +202,7 @@ public class CommandListener extends ListenerAdapter {
                     respond("*Steals the cookie*", event);
                 }
             }
-            if (messageText.toLowerCase().contains("thank") | messageText.toLowerCase().contains("ty")) {
+            if (messageText.toLowerCase().contains("thank") | messageText.toLowerCase().contains("thx")) {
                 if (event.getChannel().getHistoryBefore(event.getMessageId(), 1).complete().getRetrievedHistory().get(0).getAuthor().getId().equals(Constants.ZBotID)) {
                     printToConsole(event.getChannel().getHistoryBefore(event.getMessageId(), 1).complete().getRetrievedHistory().get(0).getContent());
                     respond("You're welcome! ^-^", event);
@@ -235,61 +239,61 @@ public class CommandListener extends ListenerAdapter {
             printToConsole("Command: " + command);
 
             switch (clean(command)) {
-                case "storespell":
-                case "sspell":
-                case "ss":
-                    SL.sortNotes();
-                    Note spell = new Note();
-                    spell.noteName = messageText.split("<desc>")[0].replaceFirst(command, "").trim();
-                    spell.noteDesc = messageText.split("<desc>")[1].trim();
-                    SL.StoredNotes.add(spell);
-                    respond(markdown(spell.getInfo()), event);
-                    printToConsole(spell.getInfo());
-                    printToConsole("Stored new spell: " + spell.noteName);
+                case "storenote":
+                case "snote":
+                case "sn":
+                    NoteList.sortNotes();
+                    Note note = new Note();
+                    note.noteName = messageText.split("<desc>")[0].replaceFirst(command, "").trim();
+                    note.noteDesc = messageText.split("<desc>")[1].trim();
+                    NoteList.StoredNotes.add(note);
+                    respond(markdown(note.getInfo()), event);
+                    printToConsole(note.getInfo());
+                    printToConsole("Stored new note: " + note.noteName);
                     break;
-                case "showspell":
-                case "spell":
-                    for (Note foundSpell : SL.StoredNotes) {
-                        if (foundSpell.noteName.toLowerCase().contains(messageText.replaceFirst(messageText.split(" ")[0], "").toLowerCase().trim())) {
-                            respond(markdown(foundSpell.getInfo()), event);
-                            printToConsole("Displaying spell: " + foundSpell.noteName);
+                case "showsnote":
+                case "note":
+                    for (Note foundNote : NoteList.StoredNotes) {
+                        if (foundNote.noteName.toLowerCase().contains(messageText.replaceFirst(messageText.split(" ")[0], "").toLowerCase().trim())) {
+                            respond(markdown(foundNote.getInfo()), event);
+                            printToConsole("Displaying spell: " + foundNote.noteName);
                         } else {
-                            printToConsole(foundSpell.noteName.trim() + " =/= " + messageText.replaceFirst(messageText.split(" ")[0].toLowerCase(), "").trim());
+                            printToConsole(foundNote.noteName.trim() + " =/= " + messageText.replaceFirst(messageText.split(" ")[0].toLowerCase(), "").trim());
                         }
                     }
                     printToConsole("Finished displaying spells.");
                     break;
-                case "listspells":
-                case "lspells":
-                case "ls":
-                case "spelllist":
-                case "spelll":
-                case "sl":
-                case "spells":
-                    SL.sortNotes();
-                    String spellList = "########## List of Stored Spells ##########\n";
-                    for (Note foundSpell : SL.StoredNotes) {
-                        spellList += foundSpell.noteName + "\n";
+                case "listnotes":
+                case "lnotes":
+                case "ln":
+                case "notelist":
+                case "notel":
+                case "nl":
+                case "notes":
+                    NoteList.sortNotes();
+                    String noteList = "########## List of Stored Notes ##########\n";
+                    for (Note foundSpell : NoteList.StoredNotes) {
+                        noteList += foundSpell.noteName + "\n";
                     }
-                    respond(markdown(spellList), event);
-                    printToConsole("Listing all Stored Spells");
+                    respond(markdown(noteList), event);
+                    printToConsole("Listing all Stored Notes");
                     break;
-                case "deletespell":
-                case "dspell":
-                case "ds":
-                    printToConsole("Looking for spell");
-                    for (int i = 0; i < SL.StoredNotes.size(); i++) {
-                        printToConsole("Testing " + i + " out of " + SL.StoredNotes.size());
-                        if (SL.StoredNotes.get(i).noteName.trim().equals(messageText.replaceFirst(messageText.split(" ")[0].toLowerCase(), "").trim())) {
-                            respond(fix("Deleted " + SL.StoredNotes.get(i).noteName), event);
-                            printToConsole("Deleted " + SL.StoredNotes.get(i).noteName);
-                            SL.StoredNotes.remove(i);
+                case "deletenote":
+                case "dnote":
+                case "dn":
+                    printToConsole("Looking for note");
+                    for (int i = 0; i < NoteList.StoredNotes.size(); i++) {
+                        printToConsole("Testing " + i + " out of " + NoteList.StoredNotes.size());
+                        if (NoteList.StoredNotes.get(i).noteName.trim().equals(messageText.replaceFirst(messageText.split(" ")[0].toLowerCase(), "").trim())) {
+                            respond(fix("Deleted " + NoteList.StoredNotes.get(i).noteName), event);
+                            printToConsole("Deleted " + NoteList.StoredNotes.get(i).noteName);
+                            NoteList.StoredNotes.remove(i);
                             break;
                         } else {
-                            printToConsole(SL.StoredNotes.get(i).noteName.trim() + " =/= " + messageText.replaceFirst(messageText.split(" ")[0].toLowerCase(), "").trim());
+                            printToConsole(NoteList.StoredNotes.get(i).noteName.trim() + " =/= " + messageText.replaceFirst(messageText.split(" ")[0].toLowerCase(), "").trim());
                         }
                     }
-                    printToConsole("No spell with that name found.");
+                    printToConsole("No note with that name found.");
                     break;
                 case "save":
                     if (saveGame()) {
@@ -306,15 +310,15 @@ public class CommandListener extends ListenerAdapter {
                             + "<Slashes (/) denote multiple different way to use the same command. There are a couple other alternatives, but in the interests of\n"
                             + "readability I'm not listing every single variant here.>\n"
                             + "\n1.   " + Constants.ZBotPrefix + "commands\n Shows this list, which you probably know.\n"
-                            + "\n2.   " + Constants.ZBotPrefix + "listspells/spelllist/spells\n Show a list of all the stored spells.\n"
-                            + "\n3.   " + Constants.ZBotPrefix + "storespell [spell name] \"<desc>\" [spell description]\n Creates and stores a new spell.\n"
-                            + "\n4.   " + Constants.ZBotPrefix + "deletespell [spell name]\n Delete a stored spell, must type out the entire name to avoid accidents.\n"
-                            + "\n5.   " + Constants.ZBotPrefix + "showspell/spell [spell name]\n Displays the stored information on all spells matching the inputted name.\n"
-                            + "\n6.   " + Constants.ZBotPrefix + "save\n Saves all changes made to the list of stored spells.\n"
+                            + "\n2.   " + Constants.ZBotPrefix + "listnotes/notelist/notes\n Show a list of all the stored spells.\n"
+                            + "\n3.   " + Constants.ZBotPrefix + "storenote [spell name] \"<desc>\" [spell description]\n Creates and stores a new spell.\n"
+                            + "\n4.   " + Constants.ZBotPrefix + "deletenote [spell name]\n Delete a stored note, must type out the entire name to avoid accidents.\n"
+                            + "\n5.   " + Constants.ZBotPrefix + "shownote/note [note name]\n Displays the stored information on all notes matching the specified name.\n"
+                            + "\n6.   " + Constants.ZBotPrefix + "save\n Saves all changes made to the list of stored notes.\n"
                             + "\n7.   " + Constants.ZBotPrefix + "roll [expression]\n Rolls magical dice according the expression. Support addition and subtraction.\n"
-                            + "\n8.   " + Constants.ZBotPrefix + "wildmagic [spell level]\n Rolls to see if you triggered a wild magic effect, rolls an effect if you did. Current chance is \n"
+                            + "\n8.   " + Constants.ZBotPrefix + "wildmagic [spell level]\n Rolls to see if you triggered a wild magic effect, rolls an effect if you did.\nCurrent chance is 1 in " + wmChance + " minus the spell's level.\n"
                             + "\n9.   " + Constants.ZBotPrefix + "forcewildmagic\n Displays a random wild magic effect from the table of " + wildMagic.effectList.size() + " effects\n"
-                            + "\n\nChanges to the list of spells are ONLY saved when using the \"save\" command"
+                            + "\n\nChanges to the list of notes are ONLY saved when using the \"save\" command"
                             + "\n or when Zayle shuts the bot down safely. If you made a mistake that needs to be"
                             + "\n undone, let her know and she can shut me down without saving.";
                     respond(markdown(response), event);
@@ -420,33 +424,37 @@ public class CommandListener extends ListenerAdapter {
                 case "leave":
                     String direction = messageText.replaceFirst(command, "").trim().toLowerCase();
                     String moveResult = "";
-                    Player movingPlayer = game.getPlayerById(author.getId());
                     
-                    if (!game.checkMove(movingPlayer, direction)) {
-                        respond(markdown("Can't move that way :/"), event);
+                    if (player == null) {
+                        respond(noChar, event);
                         break;
                     }
                     
-                    switch (direction){
+                    if (!game.checkMove(player, direction)) {
+                        respond(markdown("There's no exit there! Use the \"" + Constants.ZBotPrefix + "look\" command to look around."), event);
+                        break;
+                    }
+                    
+                    switch (direction.substring(0, 1)){
                         case "n":
-                            respondIn(markdown("<" + movingPlayer.name + "> goes through a door to the north"), event);
-                            moveResult += "\n" + game.movePlayer(movingPlayer, "n");
-                            notifyOthers(markdown("<" + movingPlayer.name + "> comes from a door to the south"), event);
+                            respondIn(markdown(player.name + " goes through a door to the north"), event);
+                            moveResult += "\n" + game.movePlayer(player, "n");
+                            notifyOthers(markdown(player.name + " comes from a door to the south"), event);
                             break;
                         case "e":
-                            respondIn(markdown("<" + movingPlayer.name + "> goes through a door to the east"), event);
-                            moveResult += "\n" + game.movePlayer(movingPlayer, "e");
-                            notifyOthers(markdown("<" + movingPlayer.name + "> comes from a door to the west"), event);
+                            respondIn(markdown(player.name + " goes through a door to the east"), event);
+                            moveResult += "\n" + game.movePlayer(player, "e");
+                            notifyOthers(markdown(player.name + " comes from a door to the west"), event);
                             break;
                         case "s":
-                            respondIn(markdown("<" + movingPlayer.name + "> goes through a door to the south"), event);
-                            moveResult += "\n" + game.movePlayer(movingPlayer, "s");
-                            notifyOthers(markdown("<" + movingPlayer.name + "> comes from a door to the north"), event);
+                            respondIn(markdown(player.name + " goes through a door to the south"), event);
+                            moveResult += "\n" + game.movePlayer(player, "s");
+                            notifyOthers(markdown(player.name + " comes from a door to the north"), event);
                             break;
                         case "w":
-                            respondIn(markdown("<" + movingPlayer.name + "> goes through a door to the west"), event);
-                            moveResult += "\n" + game.movePlayer(movingPlayer, "w");
-                            notifyOthers(markdown("<" + movingPlayer.name + "> comes from a door to the east"), event);
+                            respondIn(markdown(player.name + " goes through a door to the west"), event);
+                            moveResult += "\n" + game.movePlayer(player, "w");
+                            notifyOthers(markdown(player.name + " comes from a door to the east"), event);
                             break;
                     }
                     respond(markdown(moveResult), event);
@@ -455,7 +463,44 @@ public class CommandListener extends ListenerAdapter {
                 case "look":
                 case "l":
                 case "lookaround":
+                    if (player == null) {
+                        respond(noChar, event);
+                        break;
+                    }
+                    respond(markdown(game.lookAround(player)), event);
+                    break;
+                case "spawn":
+                    respond(fix(game.spawnPlayer(author.getName(), author.getId())), event);
                     respond(markdown(game.lookAround(game.getPlayerById(author.getId()))), event);
+                    break;
+                case "respawn":
+                    if (player == null) {
+                        respond(noChar, event);
+                        break;
+                    }
+                    respond(markdown(game.respawn(player)), event);
+                    break;
+                case "say":
+                    String sayText = messageText.replaceFirst(command, "").trim();
+                    
+                    if (player == null) {
+                        respond(noChar, event);
+                        break;
+                    }
+                    
+                    sayText = "<" + player.name + ">: \"" + sayText + "\"";
+                    respondIn(markdown(sayText), event);
+                    break;
+                case "emote":
+                    String emoteText = messageText.replaceFirst(command, "").trim();
+                    
+                    if (player == null) {
+                        respond(noChar, event);
+                        break;
+                    }
+                    
+                    emoteText = "> " + player.name + " " + emoteText;
+                    respondIn(markdown(emoteText), event);
                     break;
 
             }
@@ -762,7 +807,7 @@ public class CommandListener extends ListenerAdapter {
             FileOutputStream fileOut = new FileOutputStream(spellFile);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
 
-            objectOut.writeObject(SL);
+            objectOut.writeObject(NoteList);
 
             objectOut.close();
             fileOut.close();

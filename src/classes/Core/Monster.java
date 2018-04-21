@@ -102,7 +102,9 @@ public class Monster implements java.io.Serializable {
         //Return what happened
         return result;
     }
-
+    
+    
+    //The four methods below are overriden in Player.java to take the player's inventory into account
     public String onAttack(Monster target) {
         String result = "";
 

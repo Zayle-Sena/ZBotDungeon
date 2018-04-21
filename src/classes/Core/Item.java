@@ -6,14 +6,17 @@ package classes.Core;
 public abstract class Item implements java.io.Serializable, Lootable {
     String itemName = "Generic Item";
     String itemDesc = "Generic Description";
-    Boolean equipped = false;
+    
+    boolean equipped = false;
+    boolean breakable = true;
+    
 
     ItemRarity itemRarity = ItemRarity.JUNK;
     ItemType itemType = ItemType.MISC;
     UseType useType = UseType.NONE;
 
     int pointValue = 0;
-    Boolean autoConvert = false;
+    boolean autoConvert = false;
 
     int itemAccBonus = 0;
     int itemEvaBonus = 0;
@@ -92,9 +95,28 @@ public abstract class Item implements java.io.Serializable, Lootable {
     }
 
     public String loot(Player looter) {
+        looter.currentRoom.roomLoot.remove(this);
         looter.Inventory.add(this);
-        return itemName + " get (" + looter.name + ")";
+        return itemName + " get! (" + looter.name + ")";
     }
+    
+    
+    //These four methods should be overriden by items to give them special abilities.
+    
+    public String onDeath(Monster killer){return "";} //Runs when the equipper dies
+    
+    public String onKill(Monster killed){return "";} //Runs when the equipper kills something
+    
+    public String onAttack(Monster target){return "";} //Runs when the equipper hits something
+    
+    public String onAttacked(Monster attacker){return "";} //Runs when the equipper is hit by something
+    
+    
+    //Runs when someone breaks the item !!does not determine if it's allowed to be broken or not!!
+    public String onBreak(Player breaker) { 
+        return itemName + " breaks into pieces that shimmer and fade into nothingness";
+    } 
+    
 
 
 }

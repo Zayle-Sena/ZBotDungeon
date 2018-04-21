@@ -13,6 +13,7 @@ public class Player extends Monster implements java.io.Serializable {
     public Room currentRoom = null;
 
     String playerClass = "None"; //This can wait
+    boolean isDead = false;
 
     int Strength = 10; //Modifies damage done, and Saves
     int Dexterity = 10; //Modifies some skills, and Saves
@@ -20,6 +21,18 @@ public class Player extends Monster implements java.io.Serializable {
     int Intelligence = 10; //Modifies spells and some skills
     int Wisdom = 10; //Modifies perception, and Saves
     int Chasrisma = 10; //Makes you more likely to be attacked, lel
+    
+    Player(String name, String id){
+        this.name = name;
+        this.playerID = id;
+        
+        Strength = RNG.nextInt(12) + 7;
+        Dexterity = RNG.nextInt(12) + 7;
+        Constitution = RNG.nextInt(12) + 7;
+        Intelligence = RNG.nextInt(12) + 7;
+        Wisdom = RNG.nextInt(12) + 7;
+        Chasrisma = RNG.nextInt(12) + 7;
+    }
 
     @Override
     public int getInitiative() {
@@ -176,5 +189,51 @@ public class Player extends Monster implements java.io.Serializable {
                 break;
         }
         return total;
+    }
+    
+    public String onAttack(Monster target) {
+        String result = "";
+        
+        for (Item i : Inventory) {
+            result += "\n" + i.onAttack(target);
+        }
+
+        return result;
+    }
+
+    public String onAttacked(Monster attacker) {
+        String result = "";
+        
+        for (Item i : Inventory) {
+            result += "\n" + i.onAttacked(attacker);
+        }
+
+        return result;
+    }
+
+    public String onDeath(Monster killer) {
+        String result = "";
+        
+        setPoints(0);
+        isDead = true;
+        
+        for (Item i : Inventory) {
+            result += "\n" + i.onDeath(killer);
+        }
+
+        return result;
+    }
+
+    public String onKill(Monster killed) {
+        String result = "";
+        
+        for (Item i : Inventory) {
+            result += "\n" + i.onKill(killed);
+        }
+
+        result += "\n\n" + name + " takes " + killed.name + "'s points! (" + killed.getPoints() + ")";
+        addPoints(killed.getPoints());
+
+        return result;
     }
 }

@@ -103,7 +103,13 @@ public class GameInstance implements java.io.Serializable {
 
     }
 
-    public void spawnPlayer(String name, String id) {
+    public String spawnPlayer(String name, String id) {
+        for (Player p : allPlayers) {
+            if (p.playerID.equals(id)) {
+                return "You already exist inside the dungeon!";
+            }
+        }
+        
         int x = RNG.nextInt(100);
         int y = RNG.nextInt(100);
         Room startingRoom = floors.get(0).roomArray[x][y]; //Pick the magic (starting) room
@@ -114,7 +120,7 @@ public class GameInstance implements java.io.Serializable {
             startingRoom = floors.get(0).roomArray[x][y];
         }
 
-        Player player = new Player(); //Create the player
+        Player player = new Player(name, id); //Create the player
 
         player.name = name;
         player.playerID = id;
@@ -123,6 +129,7 @@ public class GameInstance implements java.io.Serializable {
         allPlayers.add(player); //Add the player to the global list of players
         startingRoom.roomPlayers.add(player); //And the player to the room
         System.out.println(name + " spawned at X: " + x + ", Y: " + y + " on floor one.");
+        return "You've been placed into the dungeon with naught but the clothes on your back.\nGood luck!";
     }
 
     public Player getPlayerById(String playerId) {
@@ -181,6 +188,16 @@ public class GameInstance implements java.io.Serializable {
         int startingY = startingRoom.yCoord;
         int startingFloor = startingRoom.floor;
         Room destination = startingRoom;
+        String cancelledMove = startingRoom.onExit(player);
+        
+        if (player.isDead){
+            return "You're dead!\n"
+                    + "Either wait around for somebody to help you (Which will probably never happen), or respawn with a new character using ..respawn";
+        }
+        
+        if (cancelledMove != null) {
+            return cancelledMove;
+        }
 
         switch (direction) {
             case "n": //north is y-1
@@ -219,6 +236,31 @@ public class GameInstance implements java.io.Serializable {
         
         return output;
     }
+    
+    public String respawn(Player player) {
+        
+        if (!player.isDead) {
+            return "You can't respawn if you're not dead. Sorry!";
+        }
+        
+        player = new Player(player.name, player.playerID);
+        
+        int x = RNG.nextInt(100);
+        int y = RNG.nextInt(100);
+        Room startingRoom = floors.get(0).roomArray[x][y]; //Pick the magic (starting) room
+
+        while (startingRoom.roomType != RoomType.SANCTUARY) {
+            x = RNG.nextInt(100);
+            y = RNG.nextInt(100);
+            startingRoom = floors.get(0).roomArray[x][y];
+        }
+        
+        player.currentRoom = startingRoom; //Add the room to the player
+        startingRoom.roomPlayers.add(player); //And the player to the room
+        
+        System.out.println(player.name + " spawned at X: " + x + ", Y: " + y + " on floor one.");
+        return "You have successfully respawned! Good luck!";
+    }
 
     public void teleportAToB(Player a, Player b) {
         a.currentRoom.roomPlayers.remove(a);
@@ -231,9 +273,14 @@ public class GameInstance implements java.io.Serializable {
         Room room = player.currentRoom;
 
         result = player.currentRoom.roomDesc;
-        result += "\n<Players:> ";
+        result += "\n\n<Players:> ";
+        int count = player.currentRoom.roomPlayers.size() - 1;
         for (Player p : player.currentRoom.roomPlayers) {
-            result += "<" + p.name + ">";
+            result += p.name;
+            if (count != 0) {
+                result += ", ";
+            }
+            count -= 1;
         }
 
         result += "\n\n<Exits:>";
