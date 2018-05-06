@@ -3,16 +3,16 @@ package Bot;
 import classes.Core.*;
 import classes.Misc.Note;
 import classes.Misc.NoteList;
+import classes.Misc.TemTable;
 import classes.Misc.WildTable;
-
 import java.io.*;
+import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.regex.*;
-
 import net.dv8tion.jda.core.entities.*;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.core.events.message.*;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 /**
  * @author Zayle Sena
@@ -28,6 +28,7 @@ public class CommandListener extends ListenerAdapter {
 
     public NoteList NoteList;
     public WildTable wildMagic;
+    public TemTable temTable;
     public String primedPrivate;
     public String primedPublic;
     public ArrayList<ArrayList<String>> primedPeople = new ArrayList();
@@ -39,6 +40,7 @@ public class CommandListener extends ListenerAdapter {
     String wme;
 
     boolean listConfirm = false;
+    boolean cookie = false;
 
     Pattern dicePattern = Pattern.compile("(\\d+|a\\s)[d]\\d+");
     Matcher diceMatcher;
@@ -47,6 +49,7 @@ public class CommandListener extends ListenerAdapter {
         boolean loadSuccess = false;
         NoteList = new NoteList();
         wildMagic = new WildTable();
+        temTable = new TemTable();
         //Trying to load the game
         try {
             gameFile = new File("game.ser");
@@ -190,17 +193,30 @@ public class CommandListener extends ListenerAdapter {
             if (messageText.toLowerCase().contains("lewd")) {
                 respond("^^^", event);
             }
-            if ((messageText.toLowerCase().contains("shut up")
+            if (((messageText.toLowerCase().contains("shut up")
                     | (messageText.toLowerCase().contains("quiet")
-                    | messageText.toLowerCase().contains("shush"))) &
-                    messageText.toLowerCase().contains("zbot")) {
-                respond("Sorry ;-;", event);
+                    | messageText.toLowerCase().contains("shush")) |
+                    messageText.toLowerCase().contains("shh"))) & event.getChannel().getHistoryBefore(message, 1).complete().getRetrievedHistory().get(0).getAuthor().getId().equals(Constants.ZBotID)) {
+                if (event.getChannel().getHistoryBefore(message, 1).complete().getRetrievedHistory().get(0).getAuthor().getId().equals(Constants.ZBotID)) {
+                    event.getChannel().getHistoryBefore(message, 1).complete().getRetrievedHistory().get(0).delete().complete();
+                }
+                Message apology = respond("Sorry ;-;", event);
+                try {
+                    sleep(2000);
+                } catch (Exception e) {}
+                    apology.delete().complete();
+                
                 return;
             }
-            if (messageText.toLowerCase().contains("cookie")) {
+            if (messageText.toLowerCase().contains("cookie") & !senderIsAdmin(event)) {
                 if (random.nextInt(3) == 0) {
                     respond("*Steals the cookie*", event);
+                    cookie = true;
                 }
+            }
+            if (messageText.toLowerCase().contains("gimme") & senderIsAdmin(event) & cookie == true) {
+                respond("*gives " + author.getName() + " the cookie*", event);
+                cookie = false;
             }
             if (messageText.toLowerCase().contains("thank") | messageText.toLowerCase().contains("thx")) {
                 if (event.getChannel().getHistoryBefore(event.getMessageId(), 1).complete().getRetrievedHistory().get(0).getAuthor().getId().equals(Constants.ZBotID)) {
@@ -502,6 +518,20 @@ public class CommandListener extends ListenerAdapter {
                     emoteText = "> " + player.name + " " + emoteText;
                     respondIn(markdown(emoteText), event);
                     break;
+                    
+                case "tt":
+                case "temtable":
+                case "temmietable":
+                    String temlevel = messageText.replaceFirst(command, "").trim();
+                    
+                    
+                    switch (Integer.parseInt(temlevel)) {
+                        case 1:
+                            respond(temTable.getOne(), event);
+                    }
+                    break;
+                    
+                    // ############### pubbie commands above
 
             }
         } else {
@@ -524,16 +554,15 @@ public class CommandListener extends ListenerAdapter {
         Message message = event.getMessage();
         String messageText = message.getContent();
         User author = message.getAuthor();
-        String authorName = author.getName();
 
-        if (!author.isBot()) {
+        /*if (!author.isBot()) {
             printToConsole("Private message received from " + authorName + "(" + author.getId() + ")");
             printToConsole("Private message Content: " + messageText);
             if (messageText.contains("<3")) {
                 respond("<3", event);
                 return;
             }
-        }
+        }*/
 
         if (messageText.startsWith(Constants.ZBotPrefix)) {
             String command = messageText.split(" ")[0];
@@ -706,33 +735,61 @@ public class CommandListener extends ListenerAdapter {
     }
 
     //Responds directly to an event, replying in whichever single channel ZBot was interacted with from.
-    public void respond(String message, MessageReceivedEvent e) {
+    public Message respond(String message, MessageReceivedEvent e) {
         switch (e.getChannelType()) {
             case TEXT:
                 if (message == null) {
-                    break;
+                    return null;
                 }
                 printToConsole("Responding to public message.");
-                e.getTextChannel().sendMessage(message).queue();
-                break;
+                return e.getTextChannel().sendMessage(message).complete();
+                
             case PRIVATE:
                 if (message == null) {
-                    break;
+                    return null;
                 }
                 printToConsole("Responding to private message.");
-                e.getPrivateChannel().sendMessage(message).queue();
-                break;
+                return e.getPrivateChannel().sendMessage(message).complete();
+                
             case GROUP:
                 if (message == null) {
                     break;
                 }
                 printToConsole("Responding to group message.");
-                e.getGroup().sendMessage(message).queue();
-                break;
+                return e.getGroup().sendMessage(message).complete();
             default:
                 printToConsole("Unknown Channel Type!");
-                break;
+                return null;
         }
+        return null;
+    }
+    public Message respond(MessageEmbed message, MessageReceivedEvent e) {
+        switch (e.getChannelType()) {
+            case TEXT:
+                if (message == null) {
+                    return null;
+                }
+                printToConsole("Responding to public message.");
+                return e.getTextChannel().sendMessage(message).complete();
+                
+            case PRIVATE:
+                if (message == null) {
+                    return null;
+                }
+                printToConsole("Responding to private message.");
+                return e.getPrivateChannel().sendMessage(message).complete();
+                
+            case GROUP:
+                if (message == null) {
+                    break;
+                }
+                printToConsole("Responding to group message.");
+                return e.getGroup().sendMessage(message).complete();
+            default:
+                printToConsole("Unknown Channel Type!");
+                return null;
+        }
+        return null;
     }
 
     //Responds in all designated channels (Just the channel in the ZBot testing grounds by default)
@@ -836,10 +893,6 @@ public class CommandListener extends ListenerAdapter {
     //Puts a message into a "fix" box (For quick notifications)
     public String fix(String string) {
         return "```fix\n" + string + "```";
-    }
-
-    public String parse(String string) {
-        return "";
     }
 
     public void printToConsole(String string) {
