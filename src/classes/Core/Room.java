@@ -73,6 +73,15 @@ public class Room implements java.io.Serializable {
 
     }
 
+    public Room(int x, int y, int f, RoomType type) {
+
+        xCoord = x;
+        yCoord = y;
+        floor = f;
+
+        this.roomType = type;
+    }
+
 
     public void setExit(Direction dir){
 

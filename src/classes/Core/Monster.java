@@ -1,6 +1,5 @@
 package classes.Core;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -10,9 +9,11 @@ public class Monster implements java.io.Serializable {
     public String name = "Not Defined";
     public String desc = "Not Defined";
 
-    public int hp = 50;
+    public int hp = 10;
+    public int maxHp = 10;
     private int points = 0;
 
+    //Overwritten in Player.java!
     public int getPoints() {
         return points;
     }
@@ -29,53 +30,62 @@ public class Monster implements java.io.Serializable {
         this.points -= points;
     }
 
-    public int minDamage = 5;
-    public int maxDamage = 10;
+    private int minDamage = 1;
+    //Overwritten in Player.java!
+    public int getMinDamage(){
+        return minDamage;
+    }
+    
+    private int maxDamage = 1;
+    //Overwritten in Player.java!
+    public int getMaxDamage(){
+        return maxDamage;
+    }
 
+    //Overwritten in Player.java!
     public int getDamage() {
-        return RNG.nextInt(maxDamage - minDamage) + minDamage + 1;
+        return RNG.nextInt(getMaxDamage() - getMinDamage() + 1) + minDamage;
     }
 
     public DamageTypes damageType = DamageTypes.PHYSICAL;
 
     private int accuracy = 75;
 
+    //Overwritten in Player.java!
     public int getAccuracy() {
         return accuracy;
     }
 
     private int evasion = 0;
 
+    //Overwritten in Player.java!
     public int getEvasion() {
         return evasion;
     }
 
     private int armour = 0;
 
+    //Overwritten in Player.java!
     public int getArmour() {
         return armour;
     }
 
     private int initiative = 20;
 
+    //Overwritten in Player.java!
     public int getInitiative() {
         return initiative;
     }
 
+    //Players do not use these save values. To get a player's save use the .getSave(char) method in Player.java
     int StrSave = 0;
     int DexSave = 0;
     int ConSave = 0;
     int WillSave = 0;
 
-    public ArrayList<Aura> auras = new ArrayList();
-
+    //Should be overridden for monsters with unique encounter effects
     public String encounter(Monster target) {
         String result = "";
-
-        for (Aura a : auras) {//Run the effect of each Aura and add to result text
-            result += a.affect(target);
-        }
-        //Return what happened
         return result;
     }
 
@@ -84,9 +94,14 @@ public class Monster implements java.io.Serializable {
         int attackRoll = RNG.nextInt(100) + 1;
 
         if (attackRoll < getAccuracy() - target.getEvasion()) { //If hit
-
-            target.hp -= getDamage() - target.getArmour(); //Deal damage, add to result text
-            result = name + " hit " + target.name + " for " + (getDamage() - target.getArmour()) + " damage!";
+            int modifiedDamage = getDamage() - RNG.nextInt(target.getArmour() + 1);
+            
+            if (modifiedDamage < 0){
+                modifiedDamage = 0;
+            }
+            
+            target.hp -= modifiedDamage; //Deal damage, add to result text
+            result = name + " hit " + target.name + " for " + (modifiedDamage) + " damage!";
             result += "\n" + onAttack(target);
 
             if (target.hp <= 0) { //If the target died, add to result text, run target's onDeath
@@ -97,14 +112,14 @@ public class Monster implements java.io.Serializable {
             }
 
         } else { //Else if missed
-            result = name + " attacked " + target.name + " but missed!";
+            result = name + " missed " + target.name + " with an attack!";
         }
         //Return what happened
         return result;
     }
     
     
-    //The four methods below are overriden in Player.java to take the player's inventory into account
+    //!!!! The four methods below are overriden in Player.java to take the player's inventory into account !!!!
     public String onAttack(Monster target) {
         String result = "";
 

@@ -151,7 +151,7 @@ public class CommandListener extends ListenerAdapter {
         String authorName = author.getName();
         
         Player player = game.getPlayerById(author.getId());
-        String noChar = "You don't have a character in the maze!\n"
+        String noChar = "You don't have a character in the deungeon!\n"
                         + "Use \"" + Constants.ZBotPrefix + "spawn\" to join.";
 
         if (!author.getId().equals(Constants.ZBotID) | messageText.contains(Constants.ZBotPrefix)) {
@@ -431,6 +431,28 @@ public class CommandListener extends ListenerAdapter {
                     respond(markdown("?"), event);
                     break;
                     
+                case "tt":
+                case "temtable":
+                case "temmietable":
+                    String temlevel = messageText.replaceFirst(command, "").trim();
+                    
+                    
+                    switch (Integer.parseInt(temlevel)) {
+                        case 1:
+                            respond(temTable.getOne(), event);
+                            break;
+                        case 2:
+                            respond(temTable.getTwo(), event);
+                            break;
+                        case 3:
+                            respond(temTable.getThree(), event);
+                            break;
+                        case 4:
+                            respond(temTable.getFour(), event);
+                            break;
+                    }
+                    break;
+                    
                     //############################### Game Commands Below ###################################
                 case "go":
                 case "move":
@@ -518,26 +540,73 @@ public class CommandListener extends ListenerAdapter {
                     emoteText = "> " + player.name + " " + emoteText;
                     respondIn(markdown(emoteText), event);
                     break;
-                    
-                case "tt":
-                case "temtable":
-                case "temmietable":
-                    String temlevel = messageText.replaceFirst(command, "").trim();
-                    
-                    
-                    switch (Integer.parseInt(temlevel)) {
-                        case 1:
-                            respond(temTable.getOne(), event);
+                case "stats":
+                    if (player == null) {
+                        respond(noChar, event);
+                        break;
                     }
+                    
+                    respond(markdown(game.getStatBlock(player)), event);
+                    
                     break;
                     
-                    // ############### pubbie commands above
+                case "inventory":
+                    if (player == null) {
+                        respond(noChar, event);
+                        break;
+                    }
+                    
+                    respond(markdown(game.checkInventory(player)), event);
+                    
+                    break;
+                    
+                case "loot":
+                    
+                    if (player == null) {
+                        respond(noChar, event);
+                        break;
+                    }
+                    
+                    respondIn(markdown(game.loot(player, messageText.replaceFirst(command, "").trim().toLowerCase())), event);
+                    
+                    break;
+                    
+                case "equip":
+                    if (player == null) {
+                        respond(noChar, event);
+                        break;
+                    }
+                    
+                    respondIn(markdown(game.equip(player, messageText.replaceFirst(command, "").trim().toLowerCase())), event);
+                    
+                    break;
+                    
+                case "unequip":
+                    if (player == null) {
+                        respond(noChar, event);
+                        break;
+                    }
+                    
+                    respondIn(markdown(game.unequip(player, messageText.replaceFirst(command, "").trim().toLowerCase())), event);
+                    
+                    break;
+                case "inspect":
+                    if (player == null) {
+                        respond(noChar, event);
+                        break;
+                    }
+                    
+                    respond(markdown(game.inspect(player, messageText.replaceFirst(command, "").trim().toLowerCase())), event);
+                    
+                    break;
+                    
+                    // ############### game commands above #######################
 
             }
         } else {
             if (!author.isBot()) {
                 diceMatcher = dicePattern.matcher(messageText);
-                if (diceMatcher.find()) {
+                if (diceMatcher.find() & !(messageText.contains("give") | messageText.contains("roll") | messageText.contains("make"))) {
                     String result = roll(messageText);
                     if (result != null) {
                         respond(markdown(result), event);
@@ -702,16 +771,12 @@ public class CommandListener extends ListenerAdapter {
                             respond("`Target not found, or you haven't spawned.`", event);
                         }
                         break;
-                    case "testaura":
+                    case "poop":
                         usingPlayer = game.getPlayerById(author.getId());
                         
-                        boolean beneficial = true;
-                        
-                        if (messageText.replaceFirst(command, "").trim().contains("f")) {
-                            beneficial = false;
+                        if (messageText.toLowerCase().contains("poop staff")) {
+                            respondIn(markdown(game.spawnStaff(usingPlayer)), event);
                         }
-                        
-                        respond(game.giveTestAura(usingPlayer, beneficial), event);
                         break;
                             
 

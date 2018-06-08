@@ -1,5 +1,7 @@
 package classes.Core;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 /**
@@ -15,28 +17,93 @@ public class Player extends Monster implements java.io.Serializable {
     String playerClass = "None"; //This can wait
     boolean isDead = false;
 
-    int Strength = 10; //Modifies damage done, and Saves
-    int Dexterity = 10; //Modifies some skills, and Saves
-    int Constitution = 10; //Modifies HP limit, Armour, and Saves
-    int Intelligence = 10; //Modifies spells and some skills
-    int Wisdom = 10; //Modifies perception, and Saves
-    int Chasrisma = 10; //Makes you more likely to be attacked, lel
+    private int strength = 10; //Modifies damage done, and Saves
+    public int getStrength(){
+        int total = strength;
+        
+        for (Item i : Inventory) {
+            if (i.equipped) {
+                total += i.itemStrBonus;
+            }
+        }
+        return total;
+    }
+    
+    private int dexterity = 10; //Modifies some skills, and Saves
+    public int getDexterity(){
+        int total = dexterity;
+        
+        for (Item i : Inventory) {
+            if (i.equipped) {
+                total += i.itemDexBonus;
+            }
+        }
+        return total;
+    }
+    
+    private int constitution = 10; //Modifies HP limit, Armour, and Saves
+    public int getConstitution(){
+        int total = constitution;
+        
+        for (Item i : Inventory) {
+            if (i.equipped) {
+                total += i.itemConBonus;
+            }
+        }
+        return total;
+    }
+    
+    private int intelligence = 10; //Modifies spells and some skills
+    public int getIntelligence(){
+        int total = intelligence;
+        
+        for (Item i : Inventory) {
+            if (i.equipped) {
+                total += i.itemIntBonus;
+            }
+        }
+        return total;
+    }
+    
+    private int wisdom = 10; //Modifies perception, and Saves
+    public int getWisdom(){
+        int total = wisdom;
+        
+        for (Item i : Inventory) {
+            if (i.equipped) {
+                total += i.itemWisBonus;
+            }
+        }
+        return total;
+    }
+    
+    private int chasrisma = 10; //Makes you more likely to be attacked, lel
+    public int getChasrisma(){
+        int total = chasrisma;
+        
+        for (Item i : Inventory) {
+            if (i.equipped) {
+                total += i.itemChaBonus;
+            }
+        }
+        return total;
+    }
     
     Player(String name, String id){
         this.name = name;
         this.playerID = id;
         
-        Strength = RNG.nextInt(12) + 7;
-        Dexterity = RNG.nextInt(12) + 7;
-        Constitution = RNG.nextInt(12) + 7;
-        Intelligence = RNG.nextInt(12) + 7;
-        Wisdom = RNG.nextInt(12) + 7;
-        Chasrisma = RNG.nextInt(12) + 7;
+        strength = RNG.nextInt(12) + 7;
+        dexterity = RNG.nextInt(12) + 7;
+        constitution = RNG.nextInt(12) + 7;
+        intelligence = RNG.nextInt(12) + 7;
+        wisdom = RNG.nextInt(12) + 7;
+        chasrisma = RNG.nextInt(12) + 7;
     }
 
     @Override
     public int getInitiative() {
-        int total = super.getInitiative() + ((Dexterity - 10) * 2);
+        int total = super.getInitiative() + ((getDexterity() - 10) * 2);
         for (Item i : Inventory) {
             if (i.equipped) {
                 total += i.itemInitBonus;
@@ -44,16 +111,35 @@ public class Player extends Monster implements java.io.Serializable {
         }
         return total;
     }
+    
+    @Override
+    public int getMinDamage(){
+        int bonusMin = 0;
+        for (Item i : Inventory) {
+            if (i.equipped) {
+                bonusMin += i.itemMinDamageBonus;
+            }
+        }
+        return super.getMinDamage() + bonusMin;
+    }
+    
+    @Override
+    public int getMaxDamage(){
+        int bonusMax = 0;
+        for (Item i : Inventory) {
+            if (i.equipped) {
+                bonusMax += i.itemMaxDamageBonus;
+            }
+        }
+        return super.getMaxDamage() + bonusMax;
+    }
 
     @Override
     public int getDamage() {
-        int total = RNG.nextInt(maxDamage - minDamage) + minDamage + 1;
-        for (Item i : Inventory) {
-            if (i.equipped) {
-                total += i.itemDamBonus;
-            }
-        }
-        total += (Strength - 10) * 2;
+        int total = RNG.nextInt(getMaxDamage() - getMinDamage() + 1) + getMinDamage();
+        
+        total += Math.round((getStrength() - 10) / 2);
+        
         return total;
     }
 
@@ -76,7 +162,7 @@ public class Player extends Monster implements java.io.Serializable {
             }
         }
 
-        total += ((Dexterity - 10) * 2);
+        total += ((getDexterity() - 10) * 2);
         return total;
     }
 
@@ -90,7 +176,7 @@ public class Player extends Monster implements java.io.Serializable {
             }
         }
 
-        total += ((Dexterity - 10) + (Strength - 10)) * 2;
+        total += ((getDexterity() - 10) + (getStrength() - 10)) * 2;
         return total;
     }
 
@@ -104,7 +190,7 @@ public class Player extends Monster implements java.io.Serializable {
             }
         }
 
-        total += Math.floor((Constitution - 10) / 2);
+        total += Math.floor((getConstitution() - 10) / 2);
 
         return total;
     }
@@ -114,15 +200,15 @@ public class Player extends Monster implements java.io.Serializable {
 
         for (Item i : Inventory) {
             if (i.equipped) {
-                total += i.itemPerBonus;
+                total += i.itemPerceptionBonus;
             }
         }
 
-        total += Math.floor((Wisdom - 10) / 2);
+        total += Math.floor((getWisdom() - 10) / 2);
         return total;
     }
 
-    public int spellBonus() {
+    public int getSpellBonus() {
         int total = 0;
 
         for (Item i : Inventory) {
@@ -131,12 +217,12 @@ public class Player extends Monster implements java.io.Serializable {
             }
         }
 
-        total += (Intelligence - 10) * 2;
+        total += (getIntelligence() - 10) * 2;
         return total;
     }
 
-    public int maxHp() {
-        int total = hp;
+    public int getMaxHp() {
+        int total = maxHp;
 
         for (Item i : Inventory) {
             if (i.equipped) {
@@ -144,7 +230,7 @@ public class Player extends Monster implements java.io.Serializable {
             }
         }
 
-        total += (Constitution - 10) * 10;
+        total += (getConstitution() - 10) * 2;
         return total;
     }
 
@@ -152,60 +238,42 @@ public class Player extends Monster implements java.io.Serializable {
         int total = 0;
         switch (save) {
             case 'S':
-                total += StrSave;
-                total += Math.floor((Strength - 10) / 2);
-                for (Item i : Inventory) {
-                    if (i.equipped) {
-                        total += i.itemStrSaveBonus;
-                    }
-                }
+                total += Math.floor((getStrength() - 10) / 2);
                 break;
             case 'D':
-                total += DexSave;
-                total += Math.floor((Dexterity - 10) / 2);
-                for (Item i : Inventory) {
-                    if (i.equipped) {
-                        total += i.itemDexSaveBonus;
-                    }
-                }
+                total += Math.floor((getDexterity() - 10) / 2);
                 break;
             case 'C':
-                total += ConSave;
-                total += Math.floor((Constitution - 10) / 2);
-                for (Item i : Inventory) {
-                    if (i.equipped) {
-                        total += i.itemConSaveBonus;
-                    }
-                }
+                total += Math.floor((getConstitution() - 10) / 2);
                 break;
             case 'W':
-                total += WillSave;
-                total += Math.floor((Wisdom - 10) / 2);
-                for (Item i : Inventory) {
-                    if (i.equipped) {
-                        total += i.itemWillSaveBonus;
-                    }
-                }
+                total += Math.floor((getWisdom() - 10) / 2);
+                break;
+            case 'I':
+                total += Math.floor((getIntelligence() - 10) / 2);
+                break;
+            case 'M':
+                total += Math.floor((getChasrisma() - 10) / 2);
                 break;
         }
         return total;
     }
     
-    public String onAttack(Monster target) {
+    public String onAttack(Monster attacked, int damage) {
         String result = "";
         
         for (Item i : Inventory) {
-            result += "\n" + i.onAttack(target);
+            result += "\n" + i.onAttack(this, attacked, damage);
         }
 
         return result;
     }
 
-    public String onAttacked(Monster attacker) {
+    public String onAttacked(Monster attacked, int damage) {
         String result = "";
         
         for (Item i : Inventory) {
-            result += "\n" + i.onAttacked(attacker);
+            result += "\n" + i.onAttacked(this, attacked, damage);
         }
 
         return result;
@@ -218,22 +286,48 @@ public class Player extends Monster implements java.io.Serializable {
         isDead = true;
         
         for (Item i : Inventory) {
-            result += "\n" + i.onDeath(killer);
+            result += "\n" + i.onDeath(killer, this);
         }
 
         return result;
     }
 
-    public String onKill(Monster killed) {
+    public String onKill(Monster killed, int damage) {
         String result = "";
         
         for (Item i : Inventory) {
-            result += "\n" + i.onKill(killed);
+            result += "\n" + i.onKill(this, killed, damage);
         }
 
         result += "\n\n" + name + " takes " + killed.name + "'s points! (" + killed.getPoints() + ")";
         addPoints(killed.getPoints());
 
+        return result;
+    }
+    
+    public String getStatBlock(){
+        String result = "";
+        
+        NumberFormat number = new DecimalFormat("+#;-#");
+        
+        result += "Name: " + name + " (" + getPoints() + " points)";
+        result += "\nHP: " + hp + "/" + getMaxHp();
+        result += "\n\nStrength: " + getStrength() + " (" + number.format(getSave('S')) + ")";
+        result += "\nDexterity: " + getDexterity() + " (" + number.format(getSave('D')) + ")";
+        result += "\nConstitution: " + getConstitution() + " (" + number.format(getSave('C')) + ")";
+        result += "\nIntelligence: " + getIntelligence() + " (" + number.format(getSave('I')) + ")";
+        result += "\nWisdom: " + getWisdom() + " (" + number.format(getSave('W')) + ")";
+        result += "\nCharisma: " + getChasrisma() + " (" + number.format(getSave('M')) + ")";
+        
+        result += "\n\nInitiative: " + getInitiative();
+        result += "\nArmour: " + getArmour();
+        result += "\nEvasion: " + getEvasion();
+        result += "\nAccuracy: " + getAccuracy();
+        
+        result += "\n\nDamage: " + getMinDamage() + " to " + getMaxDamage();
+        result += "\nSpell bonus: " + getSpellBonus();
+        
+        
         return result;
     }
 }

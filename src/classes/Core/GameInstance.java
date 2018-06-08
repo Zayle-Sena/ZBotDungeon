@@ -1,9 +1,10 @@
 package classes.Core;
 
 import Bot.CommandListener;
-import classes.Core.Auras.*;
+import classes.Core.Item.ItemRarity;
+import classes.Core.Item.ItemType;
+import classes.Core.Item.UseType;
 import classes.Core.Room.RoomType;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
@@ -35,7 +36,8 @@ public class GameInstance implements java.io.Serializable {
 
         for (int i = 0; i < initialFloors; i++) {
             Floor newFloor = new Floor();
-            newFloor.setFloor(generator.backtrackingGenerator(100, 100, i));
+            newFloor.setFloor(generator.generateFloor(100, 100, i));
+            generator.populateFloor(newFloor, i + 1); //+1 so that the value is equal to the floor number, instead of starting from 0
             floors.add(newFloor);
         }
 
@@ -90,6 +92,12 @@ public class GameInstance implements java.io.Serializable {
     }
 
     public void gameUpdate() {
+        
+        for (Player p : this.allPlayers) {
+            if (p.hp > p.getMaxHp()) {
+                p.hp = p.getMaxHp();
+            }
+        }
 
         //PUT ALL TIME BASED UPDATES HERE:
         //System.out.println("Game tick!");
@@ -128,6 +136,7 @@ public class GameInstance implements java.io.Serializable {
 
         allPlayers.add(player); //Add the player to the global list of players
         startingRoom.roomPlayers.add(player); //And the player to the room
+        player.hp = player.getMaxHp();
         System.out.println(name + " spawned at X: " + x + ", Y: " + y + " on floor one.");
         return "You've been placed into the dungeon with naught but the clothes on your back.\nGood luck!";
     }
@@ -218,17 +227,6 @@ public class GameInstance implements java.io.Serializable {
         player.currentRoom = destination; //Change the room reference in the player
         player.currentRoom.roomPlayers.add(player); //Add the player reference in the room
         
-        for (Aura a : player.auras) {
-            if (a.beneficial) {
-                for (Monster p : player.currentRoom.roomPlayers) {
-                    output += a.affect(p) + "\n";
-                }
-            } else {
-                for (Monster e : player.currentRoom.roomEnemies) {
-                    output += a.affect(e) + "\n";
-                }
-            }
-        }
         
         output += "\n" + lookAround(player);
 
@@ -282,6 +280,18 @@ public class GameInstance implements java.io.Serializable {
             }
             count -= 1;
         }
+        
+        if (!player.currentRoom.roomLoot.isEmpty()){
+            result += "\n\n<Loot:> ";
+            count = player.currentRoom.roomLoot.size() - 1;
+            for (Lootable l : player.currentRoom.roomLoot) {
+                result += l.getName();
+                if (count != 0) {
+                    result += ", ";
+                }
+                count -= 1;
+            }
+        }
 
         result += "\n\n<Exits:>";
 
@@ -301,13 +311,85 @@ public class GameInstance implements java.io.Serializable {
         return result;
     }
     
-    public String giveTestAura(Player target, boolean b){
-        target.auras.add(new TestAura(b));
-        return "Given test aura to " + target.name;
+    public String loot(Player looter, String lootableName) {
+        String result = "Item not found.";
+        for (int i = 0; i < looter.currentRoom.roomLoot.size(); i++ ) {
+            Lootable l = looter.currentRoom.roomLoot.get(i);
+            if (l.getName().toLowerCase().trim().contains(lootableName.toLowerCase().trim())) {
+                result = l.loot(looter);
+            }
+        }
+        
+        return result;
     }
-
-
-
+    
+    public String checkInventory(Player player) {
+        String result = "";
+        
+        for (Item i : player.Inventory) {
+            result += i.getName() + "\n";
+        }
+        
+        return result;
+    }
+    public String spawnStaff(Player player){
+        Item staff = new Item();
+        
+        staff.setName("Zayle's Staff");
+        staff.itemSpellBonus = 50;
+        staff.itemWisBonus = 10;
+        staff.itemInitBonus = 20;
+        staff.itemMinDamageBonus = 200;
+        staff.itemMaxDamageBonus = 250;
+        staff.itemLevel = 1;
+        staff.itemType = ItemType.WEAPON;
+        staff.useType = UseType.EQUIP;
+        staff.itemDesc = "A cool looking magical staff."
+                + "\nOne of a kind.";
+        staff.itemRarity = ItemRarity.UNIQUE;
+        staff.breakable = false;
+        staff.pointValue = 666;
+        staff.itemAccBonus = 666;
+        staff.itemHpBonus = 200;
+        staff.itemDexBonus = 10;
+        
+        player.currentRoom.roomLoot.add(staff);
+        return player.name + " poops out a fancy looking staff!";
+    }
+    
+    public String equip(Player player, String itemName) {
+        String result = "Item not found";
+        for (Item i : player.Inventory) {
+            if (i.getName().toLowerCase().trim().contains(itemName.toLowerCase().trim())) {
+                 result = i.equip(player);
+                }
+            }
+        return result;
+    }
+    public String unequip(Player player, String itemName) {
+        String result = "Item not found";
+        for (Item i : player.Inventory) {
+            if (i.getName().toLowerCase().trim().contains(itemName.toLowerCase().trim())) {
+                 result = i.unequip(player);
+                }
+            }
+        return result;
+    }
+    
+    public String getStatBlock(Player player){
+        return player.getStatBlock();
+    }
+    
+    public String inspect(Player player, String itemName) {
+        String result = "Item not found.";
+        for (Item i : player.Inventory) {
+            if (i.getName().toLowerCase().trim().contains(itemName.toLowerCase().trim())) {
+                 result = i.getStats();
+                }
+            }
+        return result;
+    }
+    
 }
 
 class GameRunner implements Runnable, java.io.Serializable {

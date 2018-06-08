@@ -10,16 +10,19 @@ import java.util.Stack;
  *
  */
 public class MapGenerator {
+    RoomGenerator roomGenerator = new RoomGenerator();
 
 
-    public Room[][] backtrackingGenerator(int sizeX, int sizeY, int floor){
+    public Room[][] generateFloor(int sizeX, int sizeY, int floor){
 
         Room[][] allRooms = new Room[sizeX][sizeY];
 
         //Initialise all rooms
         for (int i = 0; i < sizeX; i++){
             for (int k = 0; k < sizeY; k++){
-                allRooms[i][k] = new Room(i,k, floor);
+                Room room = new Room(i,k, floor);
+                room = populateRoom(room);
+                allRooms[i][k] = room;
             }
         }
 
@@ -136,5 +139,34 @@ public class MapGenerator {
         return null;
 
     }
-
+    
+    public void populateFloor(Floor floor, int Level){
+        for (int x = 0; x < 100; x++){
+            for (int y = 0; y < 100; y++){
+                populateRoom(floor.getRoom(x, y)); //populate each room with the things it needs.
+            }
+        }
+    }
+    
+    public Room populateRoom(Room room){
+        switch (room.roomType) {
+                        case LOOT:
+                            return roomGenerator.generateLootRoom(room.xCoord, room.yCoord, room.floor);
+                        case TRAP:
+                            break;
+                        case TRAPPEDLOOT:
+                            break;
+                        case GUARDEDLOOT:
+                            break;
+                        case HOSTILE:
+                            break;
+                        case SANCTUARY:
+                            break;
+                        case INFESTED:
+                            break;
+                        case EMPTY:
+                            break;
+                    }
+        return room;
+    }
 }
