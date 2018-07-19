@@ -3,6 +3,7 @@ package classes.Core;
 import static classes.Core.Item.ItemRarity.*;
 import static classes.Core.Item.ItemType.*;
 import static classes.Core.Item.UseType.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -17,6 +18,9 @@ public class Item implements java.io.Serializable, Lootable {
     public void setName(String name){
         itemName = name;
     }
+    public boolean inContainer = false;
+    public boolean isContainer = false;
+    ArrayList<Item> contents = new ArrayList();
     
     String itemDesc = "Generic Description";
     
@@ -54,16 +58,15 @@ public class Item implements java.io.Serializable, Lootable {
     public String getStats(){
         String result = "";
         
-        result += "############ " + getName() + " ############"
+        result += "############ " + this.itemRarity + " " + getName() + " ############"
                 + "\n\n" + this.itemDesc
-                + "\n\nItem Level: " + itemLevel + "\n"
-                + "\nPoint value: " + pointValue;
+                + "\n\nItem Level: " + itemLevel + "\n";
         
         if (itemAccBonus != 0) {
             result += "\nAccuracy Bonus: " + itemAccBonus;
         }if (itemEvaBonus != 0) {
             result += "\nEvasion Bonus: " + itemEvaBonus;
-        }if (itemMinDamageBonus != 0) {
+        }if (itemMinDamageBonus != 0 | itemMaxDamageBonus != 0) {
             result += "\nDamage Bonus: " + itemMinDamageBonus + " to " + itemMaxDamageBonus;
         }if (itemInitBonus != 0) {
             result += "\nInitiative Bonus: " + itemInitBonus;
@@ -82,7 +85,7 @@ public class Item implements java.io.Serializable, Lootable {
         }if (itemConBonus != 0) {
             result += "\nConstitution Bonus: " + itemConBonus;
         }if (itemIntBonus != 0) {
-            result += "\nIntelligenceBonus: " + itemIntBonus;
+            result += "\nIntelligence Bonus: " + itemIntBonus;
         }if (itemWisBonus != 0) {
             result += "\nWisdom Bonus: " + itemWisBonus;
         }if (itemChaBonus != 0) {
@@ -242,21 +245,26 @@ public class Item implements java.io.Serializable, Lootable {
 
     public enum ItemRarity {
 
-        JUNK(0), COMMON(85), UNCOMMON(20), SCARCE(10), RARE(5), EPIC(0.5), LEGENDARY(0.1), UNIQUE(0.01);
+        JUNK(0,0), COMMON(85,1), UNCOMMON(20,2), SCARCE(10,3), RARE(5,4), EPIC(0.5,5), LEGENDARY(0.1,6), UNIQUE(0.01,7);
 
         private final double chance;
+        private final int tier;
 
-        ItemRarity(double rarity) {
+        ItemRarity(double rarity, int tier) {
             this.chance = rarity;
+            this.tier = tier;
         }
 
         public double getChance() {
             return chance;
         }
+        public int getTier(){
+            return tier;
+        }
     }
 
     public enum ItemType {
-        MISC, WEAPON, HAT, ARMOUR, PANTS, BOOTS
+        MISC, WEAPON, HAT, ARMOUR, PANTS, BOOTS, CONTAINER
     }
 
     public enum UseType {
@@ -307,9 +315,31 @@ public class Item implements java.io.Serializable, Lootable {
     }
 
     public String loot(Player looter) {
-        looter.currentRoom.roomLoot.remove(this);
-        looter.Inventory.add(this);
-        return itemName + " get! (" + looter.name + ")";
+        String result = "";
+        if (isContainer) {
+            for (int i = 0; i < this.contents.size(); i++) {
+                Item item = (Item) contents.get(i);
+                result += item.loot(looter) + "\n\n";
+            }
+            return result;
+        } else {
+            if (inContainer) {
+                for (int i = 0; i < looter.currentRoom.roomLoot.size(); i++) {
+                    Item checking = looter.currentRoom.roomLoot.get(i);
+                    if (checking.isContainer) {
+                        for (int x = 0; x < checking.contents.size(); x++) {
+                            if (checking.contents.get(x) == this) {
+                                checking.contents.remove(x);
+                            }
+                        }
+                    }
+                }
+            } else {
+                looter.currentRoom.roomLoot.remove(this);
+            }
+            looter.Inventory.add(this);
+            return itemName + " get! (" + looter.name + ")";
+        }
     }
     
     

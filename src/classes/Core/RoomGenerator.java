@@ -15,22 +15,22 @@ public class RoomGenerator {
     Random RNG;
     ItemGenerator itemGenerator = new ItemGenerator();
     
-    ArrayList lootRoomDescriptions = new ArrayList();
-    ArrayList lootRoomTrappedDescriptions = new ArrayList();
-    ArrayList lootRoomGuardedDescriptions = new ArrayList();
-    ArrayList sanctuaryDescriptions = new ArrayList();
-    ArrayList emptyDescriptions = new ArrayList();
-    ArrayList hostileDescriptions = new ArrayList();
-    ArrayList infestedDescriptions = new ArrayList();
-    ArrayList trapDescriptions = new ArrayList();
-    ArrayList bossDescriptions = new ArrayList();
+    ArrayList<String> lootRoomDescriptions = new ArrayList();
+    ArrayList<String> lootRoomTrappedDescriptions = new ArrayList();
+    ArrayList<String> lootRoomGuardedDescriptions = new ArrayList();
+    ArrayList<String> sanctuaryDescriptions = new ArrayList();
+    ArrayList<String> emptyDescriptions = new ArrayList();
+    ArrayList<String> hostileDescriptions = new ArrayList();
+    ArrayList<String> infestedDescriptions = new ArrayList();
+    ArrayList<String> trapDescriptions = new ArrayList();
+    ArrayList<String> bossDescriptions = new ArrayList();
     
     public RoomGenerator(){
         RNG = new Random();
-        populateLists();
+        populateDescriptionLists();
     }
     
-    private void populateLists(){
+    private void populateDescriptionLists(){
         
         
         Scanner reader;
@@ -204,17 +204,109 @@ public class RoomGenerator {
     public Room generateLootRoom(int x, int y, int floor){
         Room room = new Room(x, y, floor, LOOT);
         
-        int itemCount = RNG.nextInt(3) + (int)Math.ceil(floor/10);
-        room.roomDesc = "Loot room with " + itemCount + " items.";
+        //room.roomDesc = "Loot room with " + itemCount + " items.";;
+        room.roomDesc = lootRoomDescriptions.get(RNG.nextInt(lootRoomDescriptions.size()));
         
+        int itemCount = RNG.nextInt(3 + (int)Math.ceil(floor/10)) + 1;
         for (int i = 0; i < itemCount; i++) {
-            if (RNG.nextInt(100/(floor + 1)) == 0) {
+            if (RNG.nextInt(10) == 0) {
                 room.roomLoot.add(itemGenerator.newItem(floor + 1, true));
             } else {
                 room.roomLoot.add(itemGenerator.newItem(floor + 1, false));
             }
         }
         
+        return room;
+    }
+    
+    public Room generateHostileRoom(int x, int y, int floor){
+        Room room = new Room(x, y, floor, HOSTILE);
+        room.roomDesc = hostileDescriptions.get(RNG.nextInt(hostileDescriptions.size()));
+        return room;
+    }
+    
+    public Room generateGuardedLootRoom(int x, int y, int floor){
+        Room room = new Room(x, y, floor, GUARDEDLOOT);
+        room.roomDesc = lootRoomGuardedDescriptions.get(RNG.nextInt(lootRoomGuardedDescriptions.size()));
+        int itemCount = RNG.nextInt(5 + (int)Math.ceil(floor/10)) + 1;
+        for (int i = 0; i < itemCount; i++) {
+            if (RNG.nextInt(10) == 0) {
+                room.roomLoot.add(itemGenerator.newItem(floor + 1, true));
+            } else {
+                room.roomLoot.add(itemGenerator.newItem(floor + 1, false));
+            }
+        }
+        return room;
+    }
+    
+    public Room generateTrappedLootRoom(int x, int y, int floor){
+        Room room = new Room(x, y, floor, TRAPPEDLOOT);
+        room.roomDesc = lootRoomTrappedDescriptions.get(RNG.nextInt(lootRoomTrappedDescriptions.size()));
+        int itemCount = RNG.nextInt(5 + (int)Math.ceil(floor/10)) + 1;
+        for (int i = 0; i < itemCount; i++) {
+            if (RNG.nextInt(10) == 0) {
+                room.roomLoot.add(itemGenerator.newItem(floor + 1, true));
+            } else {
+                room.roomLoot.add(itemGenerator.newItem(floor + 1, false));
+            }
+        }
+        return room;
+    }
+    
+    public Room generateTrappedRoom(int x, int y, int floor){
+        Room room = new Room(x, y, floor, TRAP);
+        room.roomDesc = trapDescriptions.get(RNG.nextInt(trapDescriptions.size()));
+        return room;
+    }
+    
+    public Room generateSanctuary(int x, int y, int floor){
+        Room room = new Room(x, y, floor, SANCTUARY);
+        room.roomDesc = sanctuaryDescriptions.get(RNG.nextInt(sanctuaryDescriptions.size()));
+        return room;
+    }
+    
+    public Room generateBossRoom(int x, int y, int floor){
+        Room room = new Room(x, y, floor, BOSS);
+        room.roomDesc = bossDescriptions.get(RNG.nextInt(bossDescriptions.size()));
+        return room;
+    }
+    
+    public Room generateEmptyRoom(int x, int y, int floor){
+        Room room = new Room(x, y, floor, EMPTY);
+        room.roomDesc = emptyDescriptions.get(RNG.nextInt(emptyDescriptions.size()));
+        return room;
+    }
+    
+    public Room generateInfestedRoom(int x, int y, int floor){
+        Room room = new Room(x, y, floor, INFESTED);
+        room.roomDesc = infestedDescriptions.get(RNG.nextInt(infestedDescriptions.size()));
+        room.roomDesc += "\n" + lootRoomDescriptions.get(RNG.nextInt(lootRoomDescriptions.size()));
+        
+        int itemCount = RNG.nextInt(3 + floor) + 2;
+        
+        for (int i = 0; i < itemCount; i++) {
+            if (RNG.nextInt(10) == 0) {
+                room.roomLoot.add(itemGenerator.newItem(floor + 1, true));
+            } else {
+                room.roomLoot.add(itemGenerator.newItem(floor + 1, false));
+            }
+        }
+        return room;
+    }
+    public Room generateInfestedRoom(int x, int y, int floor, String oldDesc){
+        Room room = new Room(x, y, floor, INFESTED);
+        room.roomDesc = infestedDescriptions.get(RNG.nextInt(infestedDescriptions.size()));
+        room.roomDesc += "\n" + oldDesc;
+        
+        int itemCount = RNG.nextInt(3 + floor) + 2;
+        
+        for (int i = 0; i < itemCount; i++) {
+            if (RNG.nextInt(10) == 0) {
+                room.roomLoot.add(itemGenerator.newItem(floor + 1, true));
+            } else {
+                room.roomLoot.add(itemGenerator.newItem(floor + 1, false));
+            }
+        }
         return room;
     }
 }

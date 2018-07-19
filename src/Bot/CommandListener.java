@@ -60,11 +60,11 @@ public class CommandListener extends ListenerAdapter {
                 fileIn = new FileInputStream(gameFile);
                 objectIn = new ObjectInputStream(fileIn);
 
-                printToConsole("Game found! Loading!");
                 game = (GameInstance) objectIn.readObject();
                 fileIn.close();
                 objectIn.close();
                 loadSuccess = true;
+                printToConsole("Game found! Attempting to load.");
                 //If there isn't
             } else {
                 //Start new game
@@ -92,8 +92,8 @@ public class CommandListener extends ListenerAdapter {
             //If there isn't
             } else {
                 //Start new game
-                printToConsole("Notes not found, starting new instance.");
                 NoteList = new NoteList();
+                printToConsole("Notes not found, starting new instance.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,21 +101,20 @@ public class CommandListener extends ListenerAdapter {
 
         if (game == null) {
             //This will run if the game is found to be incompatible
-            printToConsole("Game save corrupted! Creating new game.");
             gameFile.delete();
             game = new GameInstance(this);
+            printToConsole("Game save corrupted! Creating new game.");
         }
         if (NoteList == null) {
             //This will run if the game is found to be incompatible
-            printToConsole("Spell List corrupted! Creating new Spell List.");
             spellFile.delete();
             NoteList = new NoteList();
+            printToConsole("Spell List corrupted! Creating new Spell List.");
         }
 
 
         DesignatedChannels.add(Connection.discord.getGuildById("318490999556931584").getTextChannelsByName("zbot_channel", true).get(0));
-        printToConsole("Default Channel added");
-        printToConsole("Command Listener: Command Listener initialized");
+        printToConsole("Testing Grounds Channel added");
 
         try {
             if (loadSuccess) {
@@ -130,6 +129,7 @@ public class CommandListener extends ListenerAdapter {
 
 
         random.setSeed(random.nextLong());
+        printToConsole("Command Listener: Command Listener initialized");
     }
 
     @Override
@@ -155,36 +155,40 @@ public class CommandListener extends ListenerAdapter {
                         + "Use \"" + Constants.ZBotPrefix + "spawn\" to join.";
 
         if (!author.getId().equals(Constants.ZBotID) | messageText.contains(Constants.ZBotPrefix)) {
-            printToConsole("Message received from " + authorName + "(" + author.getId() + ")");
-            printToConsole("Message Content: " + messageText);
+            //printToConsole("Message received from " + authorName + "(" + author.getId() + ")");
+            //printToConsole("Message Content: " + messageText);
 
             int count = 0;
             if (messageText.toLowerCase().contains("prefix")) {
                 count += 3;
-                printToConsole("\"prefix\" found, +3");
+                //printToConsole("\"prefix\" found, +3");
+            }
+            if (messageText.toLowerCase().contains("use")) {
+                count += 1;
+                //printToConsole("\"zbot\" found, +3");
             }
             if (messageText.toLowerCase().contains("zbot")) {
                 count += 3;
-                printToConsole("\"zbot\" found, +3");
+                //printToConsole("\"zbot\" found, +3");
             } else if (messageText.toLowerCase().contains("bot")) {
                 count += 2;
-                printToConsole("\"bot\" found, +2");
+                //printToConsole("\"bot\" found, +2");
             }
             if (messageText.toLowerCase().contains("what is") | messageText.toLowerCase().contains("what's")) {
                 count += 1;
-                printToConsole("\"what is\" found, +1");
+                //printToConsole("\"what is\" found, +1");
             }
             if (messageText.toLowerCase().contains("command")) {
                 count += 2;
-                printToConsole("\"command\" found, +2");
+                //printToConsole("\"command\" found, +2");
             }
             if (messageText.toLowerCase().contains("?")) {
                 count += 1;
-                printToConsole("\"?\" found, +1");
+                //printToConsole("\"?\" found, +1");
             }
             if (messageText.toLowerCase().contains("tell")) {
                 count += 1;
-                printToConsole("\"tell\" found, +1");
+                //printToConsole("\"tell\" found, +1");
             }
             if (count > 4) {
                 respond("The current prefix is \"" + Constants.ZBotPrefix + "\"", event);
@@ -220,7 +224,7 @@ public class CommandListener extends ListenerAdapter {
             }
             if (messageText.toLowerCase().contains("thank") | messageText.toLowerCase().contains("thx")) {
                 if (event.getChannel().getHistoryBefore(event.getMessageId(), 1).complete().getRetrievedHistory().get(0).getAuthor().getId().equals(Constants.ZBotID)) {
-                    printToConsole(event.getChannel().getHistoryBefore(event.getMessageId(), 1).complete().getRetrievedHistory().get(0).getContent());
+                    //printToConsole(event.getChannel().getHistoryBefore(event.getMessageId(), 1).complete().getRetrievedHistory().get(0).getContent());
                     respond("You're welcome! ^-^", event);
                 }
             }
@@ -252,7 +256,7 @@ public class CommandListener extends ListenerAdapter {
 
         if (messageText.startsWith(Constants.ZBotPrefix)) {
             String command = messageText.split(" ")[0];
-            printToConsole("Command: " + command);
+            //Console("Command: " + command);
 
             switch (clean(command)) {
                 case "storenote":
@@ -400,10 +404,10 @@ public class CommandListener extends ListenerAdapter {
                 case "forcewildmagic":
                 case "forcewild":
                 case "fwm":
-                    if (primedPrivate != null & author.getId().equals(Constants.adminIds)) {
+                    if (primedPrivate != null & author.getId().equals(Constants.adminIds[0])) {
                         wme = primedPrivate;
                         primedPrivate = null;
-                    } else if (primedPublic != null & !author.getId().equals(Constants.adminIds)) {
+                    } else if (primedPublic != null & !author.getId().equals(Constants.adminIds[0])) {
                         wme = primedPublic;
                         primedPublic = null;
                     } else {
@@ -456,11 +460,20 @@ public class CommandListener extends ListenerAdapter {
                     //############################### Game Commands Below ###################################
                 case "go":
                 case "move":
-                case "g":
-                case "m":
-                case "walk":
-                case "leave":
-                    String direction = messageText.replaceFirst(command, "").trim().toLowerCase();
+                case "north":
+                case "n":
+                case "west":
+                case "w":
+                case "east":
+                case "e":
+                case "south":
+                case "s":
+                    String direction = "";
+                    if (messageText.split(" ").length == 0) {
+                        direction = command;
+                    } else {
+                        direction = messageText.replaceFirst(command, "").trim().toLowerCase();
+                    }
                     String moveResult = "";
                     
                     if (player == null) {
@@ -499,7 +512,6 @@ public class CommandListener extends ListenerAdapter {
                 break;
                 
                 case "look":
-                case "l":
                 case "lookaround":
                     if (player == null) {
                         respond(noChar, event);
@@ -530,6 +542,7 @@ public class CommandListener extends ListenerAdapter {
                     respondIn(markdown(sayText), event);
                     break;
                 case "emote":
+                case "me":
                     String emoteText = messageText.replaceFirst(command, "").trim();
                     
                     if (player == null) {
@@ -606,7 +619,7 @@ public class CommandListener extends ListenerAdapter {
         } else {
             if (!author.isBot()) {
                 diceMatcher = dicePattern.matcher(messageText);
-                if (diceMatcher.find() & !(messageText.contains("give") | messageText.contains("roll") | messageText.contains("make"))) {
+                if (diceMatcher.find() & !message.getAuthor().getName().trim().toLowerCase().contains("comrade")) {
                     String result = roll(messageText);
                     if (result != null) {
                         respond(markdown(result), event);
@@ -635,7 +648,7 @@ public class CommandListener extends ListenerAdapter {
 
         if (messageText.startsWith(Constants.ZBotPrefix)) {
             String command = messageText.split(" ")[0];
-            printToConsole("Command: " + command);
+            //printToConsole("Command: " + command);
 
             //Zayle's commands go here;
             if (senderIsAdmin(event) | author.getId().equals(Constants.ZBotID)) {
@@ -717,9 +730,6 @@ public class CommandListener extends ListenerAdapter {
                         primedPrivate = null;
                         primedPeople = new ArrayList();
                         respond("Primed effects reset.", event);
-                        break;
-                    case "say":
-                        respond(messageText.replaceFirst(command, "").trim(), event);
                         break;
                     case "primeperson":
                         String primeMessage = messageText.replaceFirst(command, "").trim();
@@ -806,24 +816,24 @@ public class CommandListener extends ListenerAdapter {
                 if (message == null) {
                     return null;
                 }
-                printToConsole("Responding to public message.");
+                //printToConsole("Responding to public message.");
                 return e.getTextChannel().sendMessage(message).complete();
                 
             case PRIVATE:
                 if (message == null) {
                     return null;
                 }
-                printToConsole("Responding to private message.");
+                //printToConsole("Responding to private message.");
                 return e.getPrivateChannel().sendMessage(message).complete();
                 
             case GROUP:
                 if (message == null) {
                     break;
                 }
-                printToConsole("Responding to group message.");
+                //printToConsole("Responding to group message.");
                 return e.getGroup().sendMessage(message).complete();
             default:
-                printToConsole("Unknown Channel Type!");
+                printToConsole("Unknown Channel Type, could not respond!");
                 return null;
         }
         return null;
@@ -834,24 +844,24 @@ public class CommandListener extends ListenerAdapter {
                 if (message == null) {
                     return null;
                 }
-                printToConsole("Responding to public message.");
+                //printToConsole("Responding to public message.");
                 return e.getTextChannel().sendMessage(message).complete();
                 
             case PRIVATE:
                 if (message == null) {
                     return null;
                 }
-                printToConsole("Responding to private message.");
+                //printToConsole("Responding to private message.");
                 return e.getPrivateChannel().sendMessage(message).complete();
                 
             case GROUP:
                 if (message == null) {
                     break;
                 }
-                printToConsole("Responding to group message.");
+                //printToConsole("Responding to group message.");
                 return e.getGroup().sendMessage(message).complete();
             default:
-                printToConsole("Unknown Channel Type!");
+                printToConsole("Unknown Channel Type, could not respond!");
                 return null;
         }
         return null;

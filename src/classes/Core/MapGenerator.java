@@ -153,19 +153,19 @@ public class MapGenerator {
                         case LOOT:
                             return roomGenerator.generateLootRoom(room.xCoord, room.yCoord, room.floor);
                         case TRAP:
-                            break;
+                            return roomGenerator.generateTrappedRoom(room.xCoord, room.yCoord, room.floor);
                         case TRAPPEDLOOT:
-                            break;
+                            return roomGenerator.generateTrappedLootRoom(room.xCoord, room.yCoord, room.floor);
                         case GUARDEDLOOT:
-                            break;
+                            return roomGenerator.generateGuardedLootRoom(room.xCoord, room.yCoord, room.floor);
                         case HOSTILE:
-                            break;
+                            return roomGenerator.generateHostileRoom(room.xCoord, room.yCoord, room.floor);
                         case SANCTUARY:
-                            break;
+                            return roomGenerator.generateSanctuary(room.xCoord, room.yCoord, room.floor);
                         case INFESTED:
-                            break;
+                            return roomGenerator.generateInfestedRoom(room.xCoord, room.yCoord, room.floor);
                         case EMPTY:
-                            break;
+                            return roomGenerator.generateEmptyRoom(room.xCoord, room.yCoord, room.floor);
                     }
         return room;
     }

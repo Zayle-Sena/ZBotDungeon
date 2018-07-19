@@ -34,7 +34,7 @@ public class WildTable {
         effectList.add("You turn into a potted plant until the start of your next turn. While a plant, you are incapacitated and have vulnerability to all damage. If you drop to 0 hit points, you pot beaks, and your form reverts.");
         effectList.add("For the next minute, you can teleport up to 20 feet as a bonus action on each of your turns.");
         effectList.add("You cast *levitate* on yourself.");
-        effectList.add("A unicorn controlled by the DM appears in a space within 5 feet of you, the disappears 1 minute later.");
+        effectList.add("A unicorn controlled by the DM appears in a space within 5 feet of you, then disappears 1 minute later.");
         effectList.add("You can't speak for the next minute. Whenever you try, pink bubbles float out of your mouth.");
         effectList.add("A spectral shield hovers near you for the next minute, granting you a +2 bonus to AC and immunity to *magic missle*");
         effectList.add("You are immune to being intoxicated by alcohol for the next 5d6 days.");
@@ -114,8 +114,8 @@ public class WildTable {
         effectList.add("3d6 random gems appear near you, worth 50gp each.");
         effectList.add("A gentle gust of wind blows outward from you. All within 40’ can feel it, but it otherwise does nothing.");
         effectList.add("You permanently lose the ability to smell. This sense can be restored with a Cure Disease or Remove Curse.");
-        effectList.add("Choose one permanent or triggered effect which hasn’t happened that you’ve received from this chart and remove it, even if it was beneficial.");
-        effectList.add("You transform into a stuffed animal resembling you for one minute, during which time you are considered petrified.");
+        effectList.add("Choose one permanent or triggered effect which hasn’t happened that you’ve received from this chart and remove it.");
+        effectList.add("You transform into a stuffed toy resembling you for one day, during which time you are considered petrified.");
         effectList.add("The effects of gravity are reversed for you for one minute. If you are outside, make a DC10 Dexterity (Reflex) save to avoid falling into the sky.");
         effectList.add("For 1 minute, a duplicate of yourself appears in the nearest open space which can take actions independently, and goes on the same Initiative as you. However, any damage it takes as well as any spell slots or sorcery point it uses applies to you as well.");
         effectList.add("The next single target spell you cast must target one additional target.");
@@ -147,7 +147,7 @@ public class WildTable {
         effectList.add("One random magical item within 30 feet becomes permanently nonmagical.");
         effectList.add("One random normal item within 30 feet becomes permanently magical.");
         effectList.add("All nonmagical cloth on the caster cumbles to dust as if it had aged thousands of years.");
-        effectList.add("The spell has a minimum duration of 1 round. Affects spells with an instant duration.");
+        effectList.add("The spell has a minimum duration of 1 minute. Affects spells with an instant duration.");
         effectList.add("A random heavy object appears in the air above your head. Make a DC 13 Dexterity (Reflex) save or take 4d6 bludgeoning damage.");
         effectList.add("A burst of confetti and a congratulatory banner appear in front of you with a loud bang.");
         effectList.add("The target or targets of your spell have to each roll a wild magic effect from the wild magic table.");
@@ -247,15 +247,16 @@ public class WildTable {
         effectList.add("Henceforth you trigger a wild magic surge when you cast a spell using one of your highest level known spell slots.");
         effectList.add("Any healing your spell would have done harms, and any harm it would have done heals.");
         effectList.add("You forget all the spells and cantrips you know and learn an equal number of random spells from another class. (The spells learnt are of the same level as those forgotten.)");
-        effectList.add("All your stats are reduced by 4.");
-        effectList.add("All your stats are reduced by 6 for a day.");
+        effectList.add("All your stats are reduced by 2.");
+        effectList.add("All your stats are increased by 2.");
         effectList.add("You are compelled to follow any directions given to you. You may resist with a DC15 Wisdom (Will) saving throw, but successfully doing so causes you to take 1d6 psychic damage.");
-        effectList.add("You slip backwards in time a bit, forgetting everything that happened in the last 24 hours. If you took damage during that time, you take it again immediately.");
+        effectList.add("You slip backwards in time a bit, reliving everything that happened in the last 24 hours. If you took damage during that time, you take it again immediately.");
         effectList.add("You forget a random language you know.");
         effectList.add("You lose attunement with any magical items that you are attuned to.");
         effectList.add("All your belongings cease to exist, including those not currently in your possession.");
         effectList.add("One of your limbs breaks cleanly, take 2d8 damage. Roll a d4; 1 = Left Arm, 2 = Right Arm, 3 = Left Leg, 4 = Right Leg.");
         effectList.add("You are now upside down.");
+        effectList.add("From now on, you occaisionally find that you suddenly upside down.");
         effectList.add("You become frightened of anything that moves for the next 1d4 rounds.");
         effectList.add("You are healed 4d8 + your constitution modifier. If this healing would heal you in excess of your maximum health, you are damaged instead of being healed. (If you would be healed 6 points and you are missing 2 hp you do not heal the 2 hp, and instead take 6 damage)");
         effectList.add("A hostile elemental with a CR equal to the party's CR appears nearby.");
@@ -271,7 +272,7 @@ public class WildTable {
         effectList.add("You feel weakened, the next amount of damage inflicted upon you is doubled.");
         effectList.add("A shadow grows beneath you as an ominous slide whistle plays a descending note. Make a DC13 Dexterity (Reflex) saving throw or take 5d10 bludgeoning damage and be knocked prone. Take half on a successful save and move 5ft.");
         effectList.add("Due to an unfortunate misspelling, an assassin has just been hired to kill you.");
-        effectList.add("The next time you engage an enemy, you are both transported ti a shadowy realm and are forced to settle your fight through a life and death card game.");
+        effectList.add("The next time you engage an enemy, you are both transported to a shadowy realm and are forced to settle your fight through a life and death card game.");
         effectList.add("For the next 1d3 hours you feel compelled to relieve yourself of your currency in any way you can.");
         effectList.add("All your fallen allies rise from the ground nearby as undead to attack you.");
         effectList.add("You are now known as a wanted criminal in the nearest country, though nobody knows exactly why.");
@@ -279,7 +280,16 @@ public class WildTable {
         effectList.add("You are transported without your belongings to a featureless white room, 10 feet on all sides. You do not need to eat, sleep, use the bathroom, or breathe. You spend the next 1d6 years there before reappearing where you came from, 6 seconds after having vanished.");
         effectList.add("In your hand appears a rod of distinguishing. Any time you point it at something, you are compelled to say what it is. (Even if you wouldn't know what it is)");
         effectList.add("In your hand appears a rod of extinguishing. Any time you point it at a fire, the fire goes out (Including fire from spells such as *continual flame*).");
-
+        effectList.add("The next spell you cast has a cataclymiscally more powerful effect than you expected.");
+        effectList.add("End all ongoing wild magic effects on you. If your spells or class abilities were effected by one or more effects, you may reset them to abilities or spells that are appropriate for your level.");
+        effectList.add("You forget all the spells and cantrips that you know, and learn the Fireball spell.\nThis fireball spell does twice as much damage in a doubly large AoE, but after casting it you fall prone and are paralyzed until the end of your next turn.\n");
+        effectList.add("You forget the spell you just cast, and learn a new spell of your invention. The spell must be of the same level as the spell you forgot, and must be approved by the GM.");
+        effectList.add("The spell you just cast no longer exists. It is replaced with a new spell or your invention. The spell must be of the same level as the spell you forgot, and must be approved by the GM.");
+        effectList.add("You now have functioning cat ears on the top of you head instead of whatever ears you previously had.");
+        effectList.add("For the next 2d12 hours you are at the center of a 10 foot radius *null-magic zone*.");
+        
+        
+        
 
         System.out.println("List size = " + effectList.size());
     }

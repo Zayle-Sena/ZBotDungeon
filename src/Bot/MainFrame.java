@@ -2,9 +2,9 @@ package Bot;
 
 import classes.Core.Floor;
 import classes.Core.GameInstance;
+import classes.Core.Player;
 import classes.Core.Room;
 import classes.Core.Room.RoomType;
-
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -16,7 +16,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.PrivateChannel;
@@ -82,6 +81,11 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jEditorPane1);
 
         dlgMap.setSize(new java.awt.Dimension(900, 900));
+        dlgMap.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                dlgMapMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout dlgMapLayout = new javax.swing.GroupLayout(dlgMap.getContentPane());
         dlgMap.getContentPane().setLayout(dlgMapLayout);
@@ -469,6 +473,18 @@ public class MainFrame extends javax.swing.JFrame {
             btnSpawn.setEnabled(true);
         }
     }//GEN-LAST:event_lstChannelsValueChanged
+
+    private void dlgMapMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dlgMapMouseClicked
+        int x = dlgMap.getMousePosition().x;                               
+        int y = dlgMap.getMousePosition().y;
+        
+        int roomX = (int)Math.floor(x/10);
+        int roomY = (int)Math.floor(y/10);
+        
+        Player zayle = Main.connection.commandListener.game.getPlayerById(Constants.adminIds[0]);
+        Main.connection.commandListener.game.teleportPlayerToRoom(zayle, roomX - 2, roomY - 4, Integer.valueOf(cbxFloor.getSelectedItem().toString()) - 1);
+        
+    }//GEN-LAST:event_dlgMapMouseClicked
 
 
     /**

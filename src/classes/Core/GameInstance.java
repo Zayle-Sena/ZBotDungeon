@@ -265,6 +265,11 @@ public class GameInstance implements java.io.Serializable {
         a.currentRoom = b.currentRoom;
         b.currentRoom.roomPlayers.add(a);
     }
+    public void teleportPlayerToRoom(Player player, int x, int y, int floor) {
+        player.currentRoom.roomPlayers.remove(player);
+        player.currentRoom = getRoom(x, y, floor);
+        getRoom(x, y, floor).roomPlayers.add(player);
+    }
 
     public String lookAround(Player player) {
         String result;

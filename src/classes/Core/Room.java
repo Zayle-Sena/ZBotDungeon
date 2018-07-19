@@ -16,7 +16,7 @@ public class Room implements java.io.Serializable {
     }
 
     public enum RoomType {
-        LOOT(5), TRAP(5), EMPTY(0), INFESTED(0.005), HOSTILE(20), SANCTUARY(1), TRAPPEDLOOT(5), GUARDEDLOOT(5), BOSS(0);
+        LOOT(5), TRAP(10), EMPTY(0), INFESTED(0.005), HOSTILE(45), SANCTUARY(1), TRAPPEDLOOT(10), GUARDEDLOOT(15), BOSS(0);
 
         public double chance;
 
@@ -36,7 +36,7 @@ public class Room implements java.io.Serializable {
     public boolean visitedByGenerator = false;
 
 
-    public ArrayList<Lootable> roomLoot = new ArrayList();
+    public ArrayList<Item> roomLoot = new ArrayList();
     public ArrayList<Enemy> roomEnemies = new ArrayList();
     public ArrayList<Player> roomPlayers = new ArrayList();
 
@@ -53,8 +53,6 @@ public class Room implements java.io.Serializable {
         //Picking a room type
         if (RNG.nextDouble() * 100 < RoomType.SANCTUARY.chance) {
             roomType = RoomType.SANCTUARY;
-        } else if (RNG.nextDouble() * 100 < RoomType.LOOT.chance) {
-            roomType = RoomType.LOOT;
         } else if (RNG.nextDouble() * 100 < RoomType.INFESTED.chance) {
             roomType = RoomType.INFESTED;
         } else if (RNG.nextDouble() * 100 < RoomType.TRAPPEDLOOT.chance) {
@@ -63,6 +61,8 @@ public class Room implements java.io.Serializable {
             roomType = RoomType.TRAP;
         } else if (RNG.nextDouble() * 100 < RoomType.GUARDEDLOOT.chance) {
             roomType = RoomType.GUARDEDLOOT;
+        } else if (RNG.nextDouble() * 100 < RoomType.LOOT.chance) {
+            roomType = RoomType.LOOT;
         } else if (RNG.nextDouble() * 100 < RoomType.HOSTILE.chance) {
             roomType = RoomType.HOSTILE;
         } else {
