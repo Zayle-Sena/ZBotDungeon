@@ -12,6 +12,7 @@ import java.util.Random;
 public class Item implements java.io.Serializable, Lootable {
     
     private String itemName = "Generic Item";
+    @Override
     public String getName(){
         return itemName;
     }
@@ -22,38 +23,52 @@ public class Item implements java.io.Serializable, Lootable {
     public boolean isContainer = false;
     ArrayList<Item> contents = new ArrayList();
     
-    String itemDesc = "Generic Description";
+    private String itemDesc = "Generic Description";
+    public void setDesc(String desc) {
+        itemDesc = desc;
+    }
+    public String getDesc(){
+        return itemDesc;
+    }
     
     Random RNG = new Random();
     
+    private int generatorWeight = 1;
+    public void setGeneratorWeight(int weight){
+        generatorWeight = weight;
+    }
+    public int getGeneratorWeight(){
+        return generatorWeight;
+    }
+    
     boolean equipped = false;
-    boolean breakable = true;
+    public boolean breakable = true;
     
 
-    ItemRarity itemRarity = JUNK;
-    ItemType itemType = ItemType.MISC;
-    UseType useType = UseType.NONE;
+    public ItemRarity itemRarity = JUNK;
+    public ItemType itemType = ItemType.MISC;
+    public UseType useType = UseType.NONE;
 
-    int pointValue = 0;
-    boolean autoConvert = false;
+    public int pointValue = 0;
+    public boolean autoConvert = false;
     
-    int itemLevel = 1;
+    public int itemLevel = 1;
 
-    int itemAccBonus = 0;
-    int itemEvaBonus = 0;
-    int itemMaxDamageBonus = 0;
-    int itemMinDamageBonus = 0;
-    int itemInitBonus = 0;
-    int itemArmourBonus = 0;
-    int itemPerceptionBonus = 0;
-    int itemSpellBonus = 0;
-    int itemHpBonus = 0;
-    int itemWisBonus = 0;
-    int itemDexBonus = 0;
-    int itemStrBonus = 0;
-    int itemConBonus = 0;
-    int itemIntBonus = 0;
-    int itemChaBonus = 0;
+    public int itemAccBonus = 0;
+    public int itemEvaBonus = 0;
+    public int itemMaxDamageBonus = 0;
+    public int itemMinDamageBonus = 0;
+    public int itemInitBonus = 0;
+    public int itemArmourBonus = 0;
+    public int itemPerceptionBonus = 0;
+    public int itemSpellBonus = 0;
+    public int itemHpBonus = 0;
+    public int itemWisBonus = 0;
+    public int itemDexBonus = 0;
+    public int itemStrBonus = 0;
+    public int itemConBonus = 0;
+    public int itemIntBonus = 0;
+    public int itemChaBonus = 0;
     
     public String getStats(){
         String result = "";
@@ -271,16 +286,16 @@ public class Item implements java.io.Serializable, Lootable {
         TARGETED, GENERIC, EQUIP, NONE
     }
 
-    public String use() {
-        if (useType != useType.GENERIC) {
+    public String use(Monster user) {
+        if (useType == UseType.GENERIC) {
             return "Nothing happens.";
         } else {
             return "That's not how you use this item!";
         }
     }
 
-    public String useOn(Monster target) {
-        if (useType != UseType.TARGETED) {
+    public String useOn(Monster user, Monster target) {
+        if (useType == UseType.TARGETED) {
             return "Nothing happens.";
         } else {
             return "That's not how you use this item!";

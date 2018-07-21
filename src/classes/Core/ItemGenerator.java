@@ -10,55 +10,53 @@ import java.util.Random;
 public class ItemGenerator {
     
     Random RNG;
+    ItemList PregenItems = new ItemList();
     
     public ItemGenerator(){
         RNG = new Random();
     }
     
-    public Item newItem(int floor, boolean isContainer){
+    public Item randomItem(int floor, boolean isContainer){
         Item item = new Item();
         item.itemLevel = floor;
         
-        if (isContainer) {
-            for (int i = 0; i < item.itemRarity.getTier(); i++) {
-                item.contents.add(newItem(floor, false));
-                item.setName("Treasure Chest");
-            }
-            item.itemType = MISC;
-        }
         
-        switch (item.itemType) {
-            case WEAPON:
-                item.setName("Weapon");
-                generateWeaponDamage(item, floor);
-            break;
-            case ARMOUR:
-                item.setName("Armour");
-                generateArmourStats(item, floor);
-                break;
-            case PANTS:
-                item.setName("Pants");
-                generateArmourStats(item, floor);
-                break;
-            case HAT:
-                item.setName("Hat");
-                generateHatStats(item, floor);
-                break;
-            case BOOTS:
-                item.setName("Boots");
-                generateBootStats(item, floor);
-                break;
-            case MISC:
-                item.setName("Misc item");
-                if (RNG.nextInt(11) == 10) {
-                    generateMiscStats(item, floor);
-                } else {
-                    item = pickMiscItem();
+        if (RNG.nextInt(PregenItems.size() + 8) > PregenItems.size()) {
+            if (isContainer) {
+                for (int i = 0; i < item.itemRarity.getTier(); i++) {
+                    item.contents.add(randomItem(floor, false));
+                    item.setName("Treasure Chest");
                 }
-                break;
-            default:
-                item.setName("Unidentifiable debris");
-                
+                item.itemType = MISC;
+            } else {
+                switch (item.itemType) {
+                    case WEAPON:
+                        item.setName("Weapon");
+                        generateWeaponDamage(item, floor);
+                    break;
+                    case ARMOUR:
+                        item.setName("Armour");
+                        generateArmourStats(item, floor);
+                        break;
+                    case PANTS:
+                        item.setName("Pants");
+                        generateArmourStats(item, floor);
+                        break;
+                    case HAT:
+                        item.setName("Hat");
+                        generateHatStats(item, floor);
+                        break;
+                    case BOOTS:
+                        item.setName("Boots");
+                        generateBootStats(item, floor);
+                        break;
+                    default:
+                        item.setName("Unidentifiable debris");
+
+                }
+            }
+        } else {
+            item = PregenItems.getRandom();
         }
         
         return item;
@@ -210,9 +208,5 @@ public class ItemGenerator {
         }
         
         return i;
-    }
-    
-    private Item pickMiscItem(){
-        return null;
     }
 }

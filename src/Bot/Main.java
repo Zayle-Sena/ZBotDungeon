@@ -2,7 +2,6 @@ package Bot;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -33,6 +32,7 @@ public class Main {
             mainFrame.game.stopGame();
             connection.stop();
         } catch (Exception e) {
+            mainFrame.printToConsole(e.toString());
             return "ZBot failed to stop properly!";
         }
         return "ZBot stopped.";

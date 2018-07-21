@@ -341,22 +341,23 @@ public class GameInstance implements java.io.Serializable {
         Item staff = new Item();
         
         staff.setName("Zayle's Staff");
-        staff.itemSpellBonus = 50;
-        staff.itemWisBonus = 10;
-        staff.itemInitBonus = 20;
-        staff.itemMinDamageBonus = 200;
-        staff.itemMaxDamageBonus = 250;
-        staff.itemLevel = 1;
+        staff.itemSpellBonus = 666;
+        staff.itemWisBonus = 100;
+        staff.itemInitBonus = 200;
+        staff.itemMinDamageBonus = 2000;
+        staff.itemMaxDamageBonus = 2500;
+        staff.itemLevel = 101;
         staff.itemType = ItemType.WEAPON;
         staff.useType = UseType.EQUIP;
-        staff.itemDesc = "A cool looking magical staff."
-                + "\nOne of a kind.";
+        staff.setDesc("A cool looking magical staff made of a pure white wood and embellished with silver fillament."
+                + "\nOne of a kind.");
         staff.itemRarity = ItemRarity.UNIQUE;
         staff.breakable = false;
-        staff.pointValue = 666;
+        staff.pointValue = 0;
         staff.itemAccBonus = 666;
-        staff.itemHpBonus = 200;
-        staff.itemDexBonus = 10;
+        staff.itemHpBonus = 200000;
+        staff.itemDexBonus = 100;
+        staff.itemChaBonus = -50;
         
         player.currentRoom.roomLoot.add(staff);
         return player.name + " poops out a fancy looking staff!";

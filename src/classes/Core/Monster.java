@@ -10,6 +10,23 @@ public class Monster implements java.io.Serializable {
     public String desc = "Not Defined";
 
     public int hp = 10;
+    public String damage(int amount, Monster source){
+        hp -= amount;
+        if (hp > 0){
+            return "";
+        } else {
+            hp = 0;
+            if (source != null){
+                if (source != this) {
+                    return name + " has been slain by " + source.name + "!\n" + onDeath(source);
+                } else {
+                    return name + " has slain themselves. Oops!\n" + onDeath(source);
+                }
+            } else {
+                return name + " has perished!";
+            }
+        }
+    }
     public int maxHp = 10;
     private int points = 0;
 
@@ -135,7 +152,6 @@ public class Monster implements java.io.Serializable {
     public String onDeath(Monster killer) {
         String result = "";
 
-        points = 0;
         return result;
     }
 

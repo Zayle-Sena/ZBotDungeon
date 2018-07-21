@@ -210,9 +210,9 @@ public class RoomGenerator {
         int itemCount = RNG.nextInt(3 + (int)Math.ceil(floor/10)) + 1;
         for (int i = 0; i < itemCount; i++) {
             if (RNG.nextInt(10) == 0) {
-                room.roomLoot.add(itemGenerator.newItem(floor + 1, true));
+                room.roomLoot.add(itemGenerator.randomItem(floor + 1, true));
             } else {
-                room.roomLoot.add(itemGenerator.newItem(floor + 1, false));
+                room.roomLoot.add(itemGenerator.randomItem(floor + 1, false));
             }
         }
         
@@ -231,9 +231,9 @@ public class RoomGenerator {
         int itemCount = RNG.nextInt(5 + (int)Math.ceil(floor/10)) + 1;
         for (int i = 0; i < itemCount; i++) {
             if (RNG.nextInt(10) == 0) {
-                room.roomLoot.add(itemGenerator.newItem(floor + 1, true));
+                room.roomLoot.add(itemGenerator.randomItem(floor + 1, true));
             } else {
-                room.roomLoot.add(itemGenerator.newItem(floor + 1, false));
+                room.roomLoot.add(itemGenerator.randomItem(floor + 1, false));
             }
         }
         return room;
@@ -245,9 +245,9 @@ public class RoomGenerator {
         int itemCount = RNG.nextInt(5 + (int)Math.ceil(floor/10)) + 1;
         for (int i = 0; i < itemCount; i++) {
             if (RNG.nextInt(10) == 0) {
-                room.roomLoot.add(itemGenerator.newItem(floor + 1, true));
+                room.roomLoot.add(itemGenerator.randomItem(floor + 1, true));
             } else {
-                room.roomLoot.add(itemGenerator.newItem(floor + 1, false));
+                room.roomLoot.add(itemGenerator.randomItem(floor + 1, false));
             }
         }
         return room;
@@ -286,9 +286,9 @@ public class RoomGenerator {
         
         for (int i = 0; i < itemCount; i++) {
             if (RNG.nextInt(10) == 0) {
-                room.roomLoot.add(itemGenerator.newItem(floor + 1, true));
+                room.roomLoot.add(itemGenerator.randomItem(floor + 1, true));
             } else {
-                room.roomLoot.add(itemGenerator.newItem(floor + 1, false));
+                room.roomLoot.add(itemGenerator.randomItem(floor + 1, false));
             }
         }
         return room;
@@ -302,9 +302,9 @@ public class RoomGenerator {
         
         for (int i = 0; i < itemCount; i++) {
             if (RNG.nextInt(10) == 0) {
-                room.roomLoot.add(itemGenerator.newItem(floor + 1, true));
+                room.roomLoot.add(itemGenerator.randomItem(floor + 1, true));
             } else {
-                room.roomLoot.add(itemGenerator.newItem(floor + 1, false));
+                room.roomLoot.add(itemGenerator.randomItem(floor + 1, false));
             }
         }
         return room;
